@@ -3,10 +3,10 @@ package main;
 import java.awt.image.BufferedImage;
 
 public class Animation {
-    int speed;
+    public int speed;
     public BufferedImage[] sprites;
-    int size;
-
+    public int size;
+    public int currentFrame = 1;
 
     public Animation(BufferedImage[] sprites){
         this.sprites = sprites;
@@ -18,7 +18,7 @@ public class Animation {
     public Animation(Animation animation, int start, int end){
         this.sprites = new BufferedImage[end-start];
         System.arraycopy(animation.sprites, start, this.sprites, 0, end-start);
-        this.size = sprites.length;
+        this.size = this.sprites.length;
         this.speed = 1;
     }
 
@@ -26,8 +26,16 @@ public class Animation {
     public Animation(BufferedImage[] sprites, int start, int end){
         this.sprites = new BufferedImage[end-start];
         System.arraycopy(sprites, start, this.sprites, 0, end-start);
-        this.size = sprites.length;
+        this.size = this.sprites.length;
         this.speed = 1;
+    }
+
+    public void updateFrame(){
+        if (currentFrame >= size-1){
+            currentFrame = 1;
+        } else {
+            currentFrame++;
+        }
     }
 
 }

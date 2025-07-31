@@ -8,6 +8,7 @@ import main.KeyHandler;
 
 import javax.imageio.ImageIO;
 import javax.lang.model.type.NullType;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -44,7 +45,6 @@ public class Player extends Entity{
         state = State.SITTING;
         scale = 4;
 
-
     }
 
     public void getPlayerImage() {
@@ -73,6 +73,9 @@ public class Player extends Entity{
     }
 
     public void update(){
+
+        spriteCounter++;
+
         if(keyH.upPressed){
             y -= speed;
         } else if (keyH.downPressed){
@@ -81,13 +84,26 @@ public class Player extends Entity{
             x -= speed;
             state = State.WALKING;
             direction = Direction.LEFT;
+            if(spriteCounter > step){
+                walking.updateFrame();
+                spriteCounter = 0;
+            }
         } else if(keyH.rightPressed){
             x += speed;
             state = State.WALKING;
             direction = Direction.RIGHT;
+            if(spriteCounter > step){
+                walking.updateFrame();
+                spriteCounter = 0;
+            }
         } else {
             state = State.SITTING;
+            if(spriteCounter > step){
+                sat.updateFrame();
+                spriteCounter = 0;
+            }
         }
+
 
 
     }
@@ -98,12 +114,12 @@ public class Player extends Entity{
         BufferedImage image = null;
         if (state == State.WALKING) {
             if (direction == Direction.LEFT)  {
-                image = walking.sprites[0];
+                image = walking.sprites[walking.currentFrame];
             }  else if(direction == Direction.RIGHT) {
-                image = walking.sprites[0];
+                image = walking.sprites[walking.currentFrame];
             }
         } else if (state == State.SITTING){
-            image = sat.sprites[0];
+            image = sat.sprites[sat.currentFrame];
         }
 
 
@@ -118,6 +134,8 @@ public class Player extends Entity{
         } else {
             System.out.println("Warning: image is null, cannot draw.");
         }
+
+
 
     }
 
