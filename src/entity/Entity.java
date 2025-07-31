@@ -6,21 +6,25 @@ public class Entity {
 
     public int x, y;
     public int speed;
-    public int step = 10;
+    public int step = 6;
+    public State prevState;
+    public State state;
+
     public String direction;
 
-    enum State {
+    public enum State {
         SITTING,
         WALKING
     }
 
-    enum Direction {
+    public enum Direction {
         LEFT,
         RIGHT
     }
 
 
     public int spriteCounter = 0;
+    public int pauseCounter = 0;
 
     //BufferedImage[][] names = { {1, 2}, {1, 2} };
 

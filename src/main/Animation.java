@@ -1,14 +1,29 @@
 package main;
 
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 public class Animation {
+
+    public int pauseTime = 0;
+    public Random rand = new Random();
+    public int minPauseTime = 20;
+    public int maxPauseTime = 500;
+    public int timer = 0;
+
+    public boolean animationPaused = false;
     public int speed;
     public BufferedImage[] sprites;
     public int size;
     public int currentFrame = 1;
 
+
     public Animation(BufferedImage[] sprites){
+        this.sprites = sprites;
+        this.size = sprites.length;
+        this.speed = 1;
+    }
+    public Animation(BufferedImage[] sprites, int pauseTime){
         this.sprites = sprites;
         this.size = sprites.length;
         this.speed = 1;
@@ -31,7 +46,7 @@ public class Animation {
     }
 
     public void updateFrame(){
-        if (currentFrame >= size-1){
+        if (currentFrame >= size){
             currentFrame = 1;
         } else {
             currentFrame++;
