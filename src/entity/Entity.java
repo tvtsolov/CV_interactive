@@ -7,7 +7,6 @@ public class Entity {
     public int x, y;
     public int speed;
 
-
     public String direction;
 
     enum State {
@@ -20,6 +19,9 @@ public class Entity {
         RIGHT
     }
 
+
+    public int spriteCounter = 0;
+    public int spriteNum = 1;
 
 
     //BufferedImage[][] names = { {1, 2}, {1, 2} };

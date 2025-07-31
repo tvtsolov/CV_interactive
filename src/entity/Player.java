@@ -1,5 +1,6 @@
 package entity;
 
+import main.Animation;
 import main.GamePanel;
 import main.KeyHandler;
 
@@ -16,9 +17,12 @@ public class Player extends Entity{
     GamePanel gp;
     KeyHandler keyH;
 
-    public BufferedImage[] walking = new BufferedImage[8];
-    public BufferedImage[] sitting = new BufferedImage[18];
 
+    public BufferedImage[] walkingSprires;
+    public BufferedImage[] sittingSprites;
+    public Animation walking;
+    public Animation sitting;
+    public Animation sat;
     int scale;
     public Direction direction;
     public State state;
@@ -39,20 +43,28 @@ public class Player extends Entity{
         direction = Direction.RIGHT;
         state = State.SITTING;
         scale = 4;
+
+
     }
 
     public void getPlayerImage() {
 
+        walkingSprires = new BufferedImage[8];
+        sittingSprites = new BufferedImage[18];
+
         try{
-            for(int i = 0; i < walking.length; i++){
+            for(int i = 0; i < walkingSprires.length; i++){
                 String str = "/player/walk/wlk" + (i+1) + ".png";
-                walking[i] = ImageIO.read(getClass().getResourceAsStream(str));
+                walkingSprires[i] = ImageIO.read(getClass().getResourceAsStream(str));
             }
-            for(int i = 0; i < sitting.length; i++){
+            for(int i = 0; i < sittingSprites.length; i++){
                 String str = "/player/sit/sitting" + (i+1) + ".png";
-                sitting[i] = ImageIO.read(getClass().getResourceAsStream(str));
+                sittingSprites[i] = ImageIO.read(getClass().getResourceAsStream(str));
             }
 
+            walking = new Animation(walkingSprires);
+            sitting = new Animation(sittingSprites, 0, 1);
+            sat = new Animation(sittingSprites, 2, 18);
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -67,10 +79,14 @@ public class Player extends Entity{
             y += speed;
         } else if(keyH.leftPressed){
             x -= speed;
+            state = State.WALKING;
             direction = Direction.LEFT;
         } else if(keyH.rightPressed){
             x += speed;
+            state = State.WALKING;
             direction = Direction.RIGHT;
+        } else {
+            state = State.SITTING;
         }
 
 
@@ -82,25 +98,26 @@ public class Player extends Entity{
         BufferedImage image = null;
         if (state == State.WALKING) {
             if (direction == Direction.LEFT)  {
-                image = walking[0];
+                image = walking.sprites[0];
             }  else if(direction == Direction.RIGHT) {
-                image = walking[0];
+                image = walking.sprites[0];
             }
         } else if (state == State.SITTING){
-            image = sitting[0];
+            image = sat.sprites[0];
         }
-
 
 
 
         if (image != null) {
-            g2.drawImage(image, x, y, image.getWidth()*scale, image.getHeight()*scale, null);
+            if (direction == Direction.LEFT)
+            {
+                g2.drawImage(image, x + image.getWidth()*2 , y, -image.getWidth() * scale, image.getHeight() * scale, null);
+            } else {
+                g2.drawImage(image, x, y, image.getWidth() * scale, image.getHeight() * scale, null);
+            }
         } else {
-            // Optionally, draw a placeholder or log a warning
             System.out.println("Warning: image is null, cannot draw.");
         }
-
-
 
     }
 
