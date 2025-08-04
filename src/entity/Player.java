@@ -110,6 +110,7 @@ public class Player extends Entity{
                 System.out.println("state is now SITTING");
                 animateSittingDown = true;
             } else if (animateSittingDown){
+                setState("SITTING");
                 state.animation.updateFrame();
                 spriteCounter = 0;
             } else {
