@@ -1,5 +1,6 @@
 package main;
 
+import background.BackgroundManager;
 import entity.Player;
 
 import javax.swing.JPanel;
@@ -8,34 +9,31 @@ import java.security.Key;
 
 public class GamePanel extends JPanel implements Runnable {
 
+
+
     final int originalTileSize = 64;  // 32 x 32 tile
     final int scale = 1;
     public final int tileSize = originalTileSize * scale; // 64 x 64
 
-    final int maxScreenCol = 32;
-    final int maxScreenRow = 20;
-    final int screenWidth = tileSize * maxScreenCol;
-    final int screenHeight = tileSize * maxScreenRow;
+    //public final int maxScreenCol = 32;
+    //public final int maxScreenRow = 20;
+    public final int screenWidth = 1000;
+    public final int screenHeight = 500;
 
     int FPS = 60;
 
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     Player player = new Player(this, keyH);
+    BackgroundManager bgManager = new BackgroundManager(this);
 
-    // set player default position
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4;
-
-    public GamePanel()
-    {
+        
+    public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.gray);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
-
     }
 
     public void startGameThread(){
@@ -45,7 +43,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
 
-    //------------------ONE ALTERNATIVE FOR GAME LOOP--------------------//
+    //------------------ANOTHER ALTERNATIVE FOR GAME LOOP--------------------//
 //    public void run() {
 //
 //        double drawInterval = 1000000000/FPS;
@@ -85,9 +83,6 @@ public class GamePanel extends JPanel implements Runnable {
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
-
-
-
         while(gameThread != null) {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
@@ -95,7 +90,7 @@ public class GamePanel extends JPanel implements Runnable {
 
             if(delta >= 1){
                 update();
-                repaint();
+                repaint(); // asks Swing to redraw the screen, eventually this calls paintComponent
                 delta--;
             }
 
@@ -103,9 +98,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update(){
-
         player.update();
-
     }
 
     public void paintComponent(Graphics g){
@@ -113,6 +106,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
 
+        bgManager.draw(g2);
         player.draw(g2);
         g2.dispose();
 

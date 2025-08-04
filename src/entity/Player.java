@@ -1,62 +1,149 @@
 package entity;
 
-import main.Animation;
-import main.GamePanel;
-import main.KeyHandler;
-
-import main.KeyHandler;
+import main.*;
 
 import javax.imageio.ImageIO;
-import javax.lang.model.type.NullType;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Player extends Entity{
 
-    GamePanel gp;
-    KeyHandler keyH;
+    private GamePanel gp;
+    private KeyHandler keyH;
 
+    //private int initailX = 100;
+    //private int initailY = 50;
+    public final int screenX, screenY;
 
-    public BufferedImage[] walkingSprites;
-    public BufferedImage[] sittingSprites;
-    public Animation walking;
-    public Animation sitting;
-    public Animation sat;
+    private BufferedImage[] walkingSprites;
+    private BufferedImage[] sittingSprites;
+    private Animation walking;
+    private Animation sitting;
+    private Animation sat;
+    private State[] states;
+    public State prevState;
+    public State state;
     private int scale;
-    public Direction direction;
-    public boolean animateSittingDown = false;
+    private Direction direction;
+    private boolean animateSittingDown = false;
 
 
     public Player(GamePanel gp, KeyHandler keyH){
         this.gp = gp;
         this.keyH = keyH;
-        setDefaultValues(); // sets speed as well as X and Y
+        screenX = gp.screenWidth/2;
+        screenY = gp.screenHeight/2;
         getPlayerImage();
+        createStates();
+        setDefaultValues(); // sets speed as well as X and Y
+
     }
 
-    public State getPlayerState(){
+    private void setDefaultValues(){
+
+        worldX = Config.PLAYER_INIT_POS_X;
+        worldY = Config.PLAYER_INIT_POS_Y;
+        scale = Config.SCALE;
+        speed = Config.PLAYER_SPEED;
+
+        direction = Direction.RIGHT;
+        setState("SAT");
+        prevState = state;
+    }
+
+    private State getPlayerState(){
         return state;
     }
 
-    public void updateState(State newSt){
+    private void updateState(State newSt){
         prevState = state;
         state = newSt;
+
     }
 
-    public void setDefaultValues(){
+    private void setState(String stateName){
+        for(State st : states){
+            if(st.name.equals(stateName)){
+                prevState = state;
+                state = st;
+            }
 
-        x = 100;
-        y = 100;
-        speed = 4;
-        direction = Direction.RIGHT;
-        state = State.SITTING;
-        prevState = state;
-        scale = 4;
+        }
     }
 
-    public void getPlayerImage() {
+
+
+    private void createStates(){
+        states = new State[3];
+        states[0] = new State("WALKING", walking);
+        states[1] = new State("SITTING", sitting);
+        states[2] = new State("SAT", sat);
+    }
+
+    private void manageState(KeyHandler kh){ // this can go into its own stateManager class, maybe?
+
+        if(kh.leftPressed){
+            pauseCounter = 0;
+            worldX -= speed;
+            setState("WALKING");
+            System.out.println("state is now WALKING");
+            direction = Direction.LEFT;
+            if(spriteCounter > step){
+                state.animation.updateFrame();
+                spriteCounter = 0;
+            }
+        } else if(kh.rightPressed){
+            pauseCounter = 0;
+            worldX += speed;
+            setState("WALKING");
+            System.out.println("state is now WALKING");
+            direction = Direction.RIGHT;
+            if(spriteCounter > step){
+                state.animation.updateFrame();
+                spriteCounter = 0;
+            }
+        } else { // if not moving at all, no arrows are being pressed
+            if (prevState.name.equals("WALKING") && !animateSittingDown) {
+                //start sitting down animation
+                setState("SITTING");
+                System.out.println("state is now SITTING");
+                animateSittingDown = true;
+            } else if (animateSittingDown){
+                state.animation.updateFrame();
+                spriteCounter = 0;
+            } else {
+                if(prevState.name.equals("SITTING")){
+                    state.setFrame(1);
+                }
+                setState("SAT");
+                System.out.println("state is now SAT");
+                pauseCounter++;
+
+                if (!sat.animationPaused) { // always start the sat animation with a pause
+                    sat.timer = sat.rand.nextInt(sat.minPauseTime, sat.maxPauseTime); // sets when we will unpause/start animating the sat animation
+                    sat.animationPaused = true;
+                } else { // State.SAT
+                    if (pauseCounter > sat.timer) { // time to animate the idle animation
+                        setState("SAT");
+                        System.out.println("State is now SAT");
+                        if (spriteCounter > step) { // time for the next frame
+                            state.animation.updateFrame();
+                            spriteCounter = 0;
+                        }
+                        if (sat.currentFrame >= sat.sprites.length){ // if sat animation is over
+                            pauseCounter = 0;
+                            sat.animationPaused = false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    private void getPlayerImage() {
 
         walkingSprites = new BufferedImage[8];
         sittingSprites = new BufferedImage[18];
@@ -84,96 +171,49 @@ public class Player extends Entity{
     public void update(){
 
         spriteCounter++;
-
-        if(keyH.upPressed){
-            //y -= speed;
-        } else if (keyH.downPressed){
-            //y += speed;
-        } else if(keyH.leftPressed){
-            pauseCounter = 0;
-            x -= speed;
-            updateState(State.WALKING);
-            direction = Direction.LEFT;
-            if(spriteCounter > step){
-                walking.updateFrame();
-                spriteCounter = 0;
-            }
-        } else if(keyH.rightPressed){
-            pauseCounter = 0;
-            x += speed;
-            updateState(State.WALKING);
-            direction = Direction.RIGHT;
-            if(spriteCounter > step){
-                walking.updateFrame();
-                spriteCounter = 0;
-            }
-        } else { // if not moving at all, no arrows are being pressed
-            if (prevState == State.WALKING && !animateSittingDown) {
-                //start sitting down animation
-                updateState(State.SITTING);
-                animateSittingDown = true;
-            } else if (animateSittingDown){
-                sitting.updateFrame();
-            } else {
-                updateState(State.SITTING);
-                pauseCounter++;
-
-                if (!sat.animationPaused) { // always start the sat animation with a pause
-                    sat.timer = sat.rand.nextInt(sat.minPauseTime, sat.maxPauseTime); // sets when we will unpause/start animating the sat animation
-                    sat.animationPaused = true;
-                } else {
-                    if (pauseCounter > sat.timer) { // time to animate
-                        if (spriteCounter > step) { // time for next frame
-                            sat.updateFrame();
-                            spriteCounter = 0;
-                        }
-                        if (sat.currentFrame >= sat.sprites.length){ // if sat animation is over
-                            pauseCounter = 0;
-                            sat.animationPaused = false;
-                        }
-                    }
-                }
-            }
-        }
-
-
+        manageState(keyH);
 
     }
+
     public void draw(Graphics2D g2){
+
         //g2.setColor(Color.white);
         //g2.fillRect(x, y, gp.tileSize, gp.tileSize);
 
         BufferedImage image = null;
-        if (state == State.WALKING) {
+        if (state.name.equals("WALKING")) {
             if (direction == Direction.LEFT)  {
-                image = walking.sprites[walking.currentFrame-1];
+                image = state.getCurrentSprite();
             }  else if(direction == Direction.RIGHT) {
-                image = walking.sprites[walking.currentFrame-1];
+                image = state.getCurrentSprite();
             }
-        } else if (state == State.SITTING){
+        } else if (state.name.equals("SITTING")){
+            // short animation run once
+            // when over transition to next state = SAT
+
             if (animateSittingDown) {
                 if (sitting.currentFrame <= sitting.size){
-                    image = sitting.sprites[sitting.currentFrame - 1];
+                    image = state.getCurrentSprite();
                     if (sitting.currentFrame == sitting.size){
                         animateSittingDown = false;
                     }
                 } else {
                     animateSittingDown = false;
-                    image = sat.sprites[sat.currentFrame - 1];
                 }
             } else {
-                image = sat.sprites[sat.currentFrame - 1];
+                image = state.getCurrentSprite();
             }
+        } else if (state.name.equals("SAT")){
+            image = state.getCurrentSprite();
+
         }
-
-
 
         if (image != null) {
             if (direction == Direction.LEFT)
             {
-                g2.drawImage(image, x + image.getWidth()*4 , y, -image.getWidth() * scale, image.getHeight() * scale, null);
+                g2.drawImage(image, worldX + image.getWidth()*scale , worldY, -image.getWidth() * scale, image.getHeight() * scale, null);
             } else {
-                g2.drawImage(image, x, y, image.getWidth() * scale, image.getHeight() * scale, null);
+                g2.drawImage(image, worldX, worldY, image.getWidth() * scale, image.getHeight() * scale, null);
             }
         } else {
             System.out.println("Warning: image is null, cannot draw.");

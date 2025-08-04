@@ -18,6 +18,7 @@ public class Animation {
     public int currentFrame = 1;
 
 
+
     public Animation(BufferedImage[] sprites){
         this.sprites = sprites;
         this.size = sprites.length;
@@ -29,7 +30,7 @@ public class Animation {
         this.speed = 1;
     }
 
-    //make a separate animation out of a bigger one, extract smaller step out of big animation
+    //make a separate animation out of a bigger one, extract a smaller step out of big animation
     public Animation(Animation animation, int start, int end){
         this.sprites = new BufferedImage[end-start];
         System.arraycopy(animation.sprites, start, this.sprites, 0, end-start);
@@ -45,6 +46,10 @@ public class Animation {
         this.speed = 1;
     }
 
+    public int getFrame(){
+        return currentFrame;
+    }
+
     public void updateFrame(){
         if (currentFrame >= size){
             currentFrame = 1;
@@ -52,5 +57,4 @@ public class Animation {
             currentFrame++;
         }
     }
-
 }
