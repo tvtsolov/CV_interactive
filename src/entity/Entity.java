@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 public class Entity {
 
     public int worldX, worldY;
+    public int x, y;
 
     public int speed;
     public int step = 6;
@@ -12,9 +13,10 @@ public class Entity {
     public String direction;
 
     public enum Direction {
-        LEFT,
+        LEFT ,
         RIGHT
     }
+
 
 
     public int spriteCounter = 0;   // timer for the speed of the animation

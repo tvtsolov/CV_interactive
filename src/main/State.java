@@ -15,11 +15,16 @@ public class State {
         return animation.currentFrame;
     }
 
+    public void setFrame(int val){
+        animation.currentFrame = val;
+    }
+
     public BufferedImage getCurrentSprite(){
         return animation.sprites[getFrame()-1];
     }
 
-    public void setFrame(int val){
-        animation.currentFrame = val;
+    public Animation getAnimation(){
+        return animation;
     }
+
 }

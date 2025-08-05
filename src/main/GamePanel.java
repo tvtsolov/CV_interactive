@@ -1,6 +1,6 @@
 package main;
 
-import background.BackgroundManager;
+
 import entity.Player;
 
 import javax.swing.JPanel;
@@ -25,7 +25,7 @@ public class GamePanel extends JPanel implements Runnable {
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     Player player = new Player(this, keyH);
-    BackgroundManager bgManager = new BackgroundManager(this);
+    AnimationManager anManager = new AnimationManager(this);
 
         
     public GamePanel() {
@@ -106,8 +106,9 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
 
-        bgManager.draw(g2);
+        anManager.draw(g2);
         player.draw(g2);
+
         g2.dispose();
 
     }
