@@ -6,6 +6,7 @@ import entity.Player;
 import javax.swing.JPanel;
 import java.awt.*;
 import java.security.Key;
+import java.sql.SQLOutput;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -108,6 +109,16 @@ public class GamePanel extends JPanel implements Runnable {
 
         anManager.draw(g2);
         player.draw(g2);
+
+//        Point panelPos = this.getLocationOnScreen(); // this == GamePanel
+//        int screenX = panelPos.x + player.x;
+//        int screenY = panelPos.y + player.y;
+//        System.out.println("Player screen position: " + screenX + ", " + screenY);
+
+
+        //System.out.println("position Location on screen is:" + loc.getLocationOnScreen());
+
+
 
         g2.dispose();
 

@@ -1,6 +1,7 @@
 package main;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Main {
 
@@ -13,6 +14,7 @@ public class Main {
         window.setResizable(true);
         window.setTitle("Game");
 
+
         GamePanel gamePanel = new GamePanel();
         window.add(gamePanel);
 
@@ -20,6 +22,7 @@ public class Main {
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+
 
         gamePanel.startGameThread();
 

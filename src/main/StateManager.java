@@ -18,7 +18,7 @@ public class StateManager {
             player.pauseCounter = 0;
             player.x -= player.speed;
             player.setState("WALKING");
-            System.out.println("state is now WALKING");
+            //System.out.println("state is now WALKING");
             player.direction = Entity.Direction.LEFT;
             if(player.spriteCounter > player.step){
                 player.state.animation.updateFrame();
@@ -28,7 +28,7 @@ public class StateManager {
             player.pauseCounter = 0;
             player.x += player.speed;
             player.setState("WALKING");
-            System.out.println("state is now WALKING");
+            //System.out.println("state is now WALKING");
             player.direction = Entity.Direction.RIGHT;
             if(player.spriteCounter > player.step){
                 player.state.animation.updateFrame();
@@ -38,7 +38,7 @@ public class StateManager {
             if (player.prevState.name.equals("WALKING") && !player.animateSittingDown) {
                 //start sitting down animation
                 player.setState("SITTING");
-                System.out.println("state is now SITTING");
+                //System.out.println("state is now SITTING");
                 player.animateSittingDown = true;
                 player.state.setFrame(1);
             } else if (player.animateSittingDown){
@@ -50,7 +50,7 @@ public class StateManager {
                     player.state.setFrame(1);
                 }
                 player.setState("SAT");
-                System.out.println("state is now SAT");
+                //System.out.println("state is now SAT");
                 player.pauseCounter++;
 
                 if (!player.sat.animationPaused) { // always start the sat animation with a pause
@@ -59,7 +59,7 @@ public class StateManager {
                 } else { // State.SAT
                     if (player.pauseCounter > player.sat.timer) { // time to animate the idle animation
                         player.setState("SAT");
-                        System.out.println("State is now SAT");
+                        //System.out.println("State is now SAT");
                         if (player.spriteCounter > player.step) { // time for the next frame
                             player.state.animation.updateFrame();
                             player.spriteCounter = 0;
