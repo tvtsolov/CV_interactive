@@ -7,8 +7,8 @@ public class Entity {
     public int worldX, worldY;
     public int x, y;
 
-    public int speed;
-    public int step = 6;
+    public float speed;
+    //public int step = 6;
 
     public String direction;
 

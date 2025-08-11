@@ -107,9 +107,8 @@ public class Player extends Entity{
 
     public void update(){
 
-        spriteCounter++;
         stateManager.run();
-
+        state.animation.updateFrame();
     }
 
     public void draw(Graphics2D g2){
@@ -130,7 +129,6 @@ public class Player extends Entity{
         Direction currentDirection = direction;
 
         state.animation.draw(g2, x, y, direction);
-
 
         BufferedImage image = null;
 

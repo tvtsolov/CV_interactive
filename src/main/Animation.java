@@ -16,13 +16,12 @@ public class Animation extends Animatable {
     public int minPauseTime = 20;
     public int maxPauseTime = 500;
     public int timer = 0;
+    public float step = 6;
 
     public boolean animationPaused = false;
-    //public int speed;
 
     public int size;
     // this is just the index of the current sprite
-
 
     public Animation(BufferedImage sprite){
         this.sprites = new BufferedImage[]{sprite};
@@ -36,11 +35,11 @@ public class Animation extends Animatable {
         this.speed = 1;
     }
 
-    // make an animation that is undependable of the player and has its own coordinates
-    public Animation(BufferedImage[] sprites, int x, int y, int speed){
+    // make an animation that is independent of the player and has its own coordinates
+    public Animation(BufferedImage[] sprites, int x, int y, float speed){
         this.sprites = sprites;
         this.size = sprites.length;
-        this.speed = 1;
+        this.step = this.step / speed;
         this.x = x;
         this.y = y;
     }
@@ -60,11 +59,17 @@ public class Animation extends Animatable {
     }
 
     public void updateFrame(){
-        if (currentFrame >= size){
-            currentFrame = 1;
-        } else {
-            currentFrame++;
+        spriteCounter++;
+        if(spriteCounter > step){
+
+            if (currentFrame >= size){
+                currentFrame = 1;
+            } else {
+                currentFrame++;
+            }
+            spriteCounter = 0;
         }
+
     }
 
 

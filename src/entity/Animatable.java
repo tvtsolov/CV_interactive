@@ -12,7 +12,10 @@ abstract public class Animatable {
 
     public int x;
     public int y;
-    public int speed = 1;
+    public float speed;
+    public int spriteCounter = 0;
+
+
     boolean active = false;
 
     public BufferedImage[] sprites;
@@ -46,9 +49,9 @@ abstract public class Animatable {
         }
     }
 
-    // draw a given image only
-    public void draw(Graphics2D g2, BufferedImage image, int x, int y){
-        int scale = Config.SCALE;
+    // draw a given image only, with a given scale
+    public void draw(Graphics2D g2, BufferedImage image, int x, int y, int scaleVal){
+        int scale = scaleVal;
         if (image != null){
             g2.drawImage(image, x + image.getWidth()*scale , y, -image.getWidth() * scale, image.getHeight() * scale, null);
         } else {
