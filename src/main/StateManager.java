@@ -16,18 +16,20 @@ public class StateManager {
     public void run(){
         if(kh.leftPressed){
             player.pauseCounter = 0;
-            player.x -= (int) player.speed;
+
             player.setState("WALKING");
             //System.out.println("state is now WALKING");
             player.direction = Entity.Direction.LEFT;
-            //player.state.animation.updateFrame();
+
         } else if(kh.rightPressed){
             player.pauseCounter = 0;
-            player.x += (int) player.speed;
+
+
+
             player.setState("WALKING");
             //System.out.println("state is now WALKING");
             player.direction = Entity.Direction.RIGHT;
-            //player.state.animation.updateFrame();
+
         } else { // if not moving at all, no arrows are being pressed
             if (player.prevState.name.equals("WALKING") && !player.animateSittingDown) {
                 //start sitting down animation
@@ -37,7 +39,7 @@ public class StateManager {
                 player.state.setFrame(1);
             } else if (player.animateSittingDown){
                 player.setState("SITTING");
-                //player.state.animation.updateFrame();
+
             } else {
                 if(player.prevState.name.equals("SITTING")){
                     player.state.setFrame(1);
@@ -53,7 +55,6 @@ public class StateManager {
                     if (player.pauseCounter > player.sat.timer) { // time to animate the idle animation
                         player.setState("SAT");
                         //System.out.println("State is now SAT");
-                        //player.state.animation.updateFrame();
                         if (player.sat.currentFrame >= player.sat.sprites.length){ // if sat animation is over
                             player.pauseCounter = 0;
                             player.sat.animationPaused = false;

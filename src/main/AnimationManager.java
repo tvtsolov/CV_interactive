@@ -43,7 +43,7 @@ public class AnimationManager {
 
             tutorialSprites[0] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/buttons/dir_buttons1.png")));
             tutorialSprites[1] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/buttons/dir_buttons2.png")));
-            tutorial = new Animation(tutorialSprites, 100, 100, 0.2F);
+            tutorial = new Animation(tutorialSprites, 100, 100, 0.13F);
         }
         catch(IOException e){
             e.printStackTrace();

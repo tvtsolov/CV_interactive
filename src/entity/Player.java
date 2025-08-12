@@ -80,6 +80,16 @@ public class Player extends Entity{
         states[2] = new State("SAT", sat);
     }
 
+    private void updatePosition(){
+        if(state.name.equals("WALKING")){
+            if (direction==Direction.RIGHT){
+                x += (int) speed;
+            } else if (direction==Direction.LEFT){
+                x -= (int) speed;
+            }
+        }
+    }
+
     private void setPlayerImage() {
 
         walkingSprites = new BufferedImage[8];
@@ -108,6 +118,7 @@ public class Player extends Entity{
     public void update(){
 
         stateManager.run();
+        updatePosition();
         state.animation.updateFrame();
     }
 
