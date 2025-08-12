@@ -1,6 +1,5 @@
 package main;
 
-import entity.Entity;
 import entity.Player;
 
 import javax.imageio.ImageIO;
@@ -26,11 +25,24 @@ public class AnimationManager {
     BufferedImage[] tutorialSprites;
     Animation tutorial;
 
-    public AnimationManager(GamePanel gp){
+    public Player player;
+
+    public AnimationManager(GamePanel gp, Player player){
         this.gp = gp;
+        this.player = player;
         getAssets();
     }
 
+    public void updateAnimationsPositions(){
+
+        if (player.state.name.equals("WALKING")) {
+            if (player.x < Config.LEFT_BOUNDARY) {
+                //
+            } else if (player.x > Config.RIGHT_BOUNDARY) {
+                background.x = player.x - (player.x-Config.RIGHT_BOUNDARY + Config.INIT_BG_X);
+            }
+        }
+    }
 
     public void getAssets() {
 
@@ -39,7 +51,8 @@ public class AnimationManager {
 
         try {
             backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/background/test-bg.png")));
-            background = new Animation(backgroundImage);
+
+            background = new Animation(backgroundImage, Config.INIT_BG_X, Config.INIT_BG_Y, player.speed);
 
             tutorialSprites[0] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/buttons/dir_buttons1.png")));
             tutorialSprites[1] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/buttons/dir_buttons2.png")));
@@ -48,31 +61,22 @@ public class AnimationManager {
         catch(IOException e){
             e.printStackTrace();
         }
-
-
     }
 
     // for each visible animatable in the array, we need to
     // activate/deactivate the animatable
     // make it update its frames - internal to the animation?
 
-
-    // TODO function for checking collisions
-
     // run all animatable objects if they are active:
     public void draw(Graphics2D g2){
 
         // draw the BG
         if (backgroundImage != null){
-            int imgW = backgroundImage.getWidth();
-            int imgH = backgroundImage.getHeight();
+            int width = Config.BG_WIDTH;
+            int height = Config.BG_HEIGHT;
 
-            double ratio = (double) gp.getHeight() / imgH;
-            int newW = (int) (imgW * ratio);
-            int newH = gp.getHeight(); // matches window height
-            int drawX = (gp.getWidth() - newW) / 2;
+            background.draw(g2, background.x, background.y, width,height);
 
-            g2.drawImage(backgroundImage, drawX, 0, newW, newH, null); // using drawImage of the Graphics object
         } else {
             System.out.println("Warning: background is null, cannot draw.");
         }
@@ -80,7 +84,7 @@ public class AnimationManager {
         // background.draw(g2, 0, -500);  // using the bg animation
 
         // draw the rest
-        tutorial.draw(g2, tutorial.x, tutorial.y);
+        tutorial.draw(g2, tutorial.x, tutorial.y, 0,0);
         tutorial.updateFrame();
 
     }

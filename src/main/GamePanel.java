@@ -10,7 +10,6 @@ import java.sql.SQLOutput;
 
 public class GamePanel extends JPanel implements Runnable {
 
-
     final int scale = Config.SCALE;
 
     public final int screenWidth = Config.screenWidth * scale;
@@ -21,7 +20,7 @@ public class GamePanel extends JPanel implements Runnable {
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     Player player = new Player(this, keyH);
-    AnimationManager anManager = new AnimationManager(this);
+    AnimationManager anManager = new AnimationManager(this, player);
 
         
     public GamePanel() {
@@ -89,14 +88,13 @@ public class GamePanel extends JPanel implements Runnable {
                 repaint(); // asks Swing to redraw the screen, eventually this calls paintComponent
                 delta--;
             }
-
         }
     }
 
     public void update(){
         player.update();
+        //anManager.updateAnimationsPositions();
     }
-
 
     public void paintComponent(Graphics g){
 

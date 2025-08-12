@@ -38,12 +38,21 @@ abstract public class Animatable {
     }
 
     // draw objects that don't rotate
-    public void draw(Graphics2D g2, int x, int y){
-        Entity.Direction dir = Entity.Direction.RIGHT;
+    public void draw(Graphics2D g2, int x, int y, int width, int height){
         BufferedImage image = sprites[currentFrame-1];
         int scale = Config.SCALE;
+
+        if(width==0){
+            width = image.getWidth() * scale;
+        }
+        if(height==0){
+            height = image.getHeight() * scale;
+        }
+
+        Entity.Direction dir = Entity.Direction.RIGHT;
+
         if (image != null) {
-            g2.drawImage(image, x, y, image.getWidth() * scale, image.getHeight() * scale, null);
+            g2.drawImage(image, x, y, width, height, null);
         } else {
             System.out.println("Warning: image is null, cannot draw.");
         }

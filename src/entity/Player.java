@@ -36,7 +36,6 @@ public class Player extends Entity{
         setPlayerImage();
         createStates();
         setDefaultValues(); // sets speed as well as X and Y
-
     }
 
     private void setDefaultValues(){
@@ -82,10 +81,13 @@ public class Player extends Entity{
 
     private void updatePosition(){
         if(state.name.equals("WALKING")){
-            if (direction==Direction.RIGHT){
-                x += (int) speed;
-            } else if (direction==Direction.LEFT){
-                x -= (int) speed;
+
+            if((x < Config.RIGHT_BOUNDARY+1 && direction == Direction.RIGHT) || (x > Config.LEFT_BOUNDARY-1 && direction == Direction.LEFT)) {
+                if (direction == Direction.RIGHT) {
+                    x += (int) speed;
+                } else if (direction == Direction.LEFT) {
+                    x -= (int) speed;
+                }
             }
         }
     }
@@ -116,7 +118,6 @@ public class Player extends Entity{
     }
 
     public void update(){
-
         stateManager.run();
         updatePosition();
         state.animation.updateFrame();

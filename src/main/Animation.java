@@ -44,6 +44,14 @@ public class Animation extends Animatable {
         this.y = y;
     }
 
+    // for animations with only one sprite
+    public Animation(BufferedImage sprite, int x, int y, float speed){
+        this.sprites = new BufferedImage[] {sprite};
+        this.size = sprites.length;
+        this.step = this.step / speed;
+        this.x = x;
+        this.y = y;
+    }
 
     //make sub animation directly from BufferedImage array with given start and end frames
     public Animation(BufferedImage[] sprites, int start, int end){
@@ -52,7 +60,6 @@ public class Animation extends Animatable {
         this.size = this.sprites.length;
         this.speed = 1;
     }
-
 
     public int getFrame(){
         return currentFrame;
@@ -71,7 +78,6 @@ public class Animation extends Animatable {
         }
 
     }
-
 
 
 }
