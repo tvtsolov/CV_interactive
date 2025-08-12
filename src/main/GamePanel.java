@@ -93,7 +93,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update(){
         player.update();
-        //anManager.updateAnimationsPositions();
+        anManager.updateAnimationsPositions();
     }
 
     public void paintComponent(Graphics g){

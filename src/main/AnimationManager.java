@@ -37,9 +37,13 @@ public class AnimationManager {
 
         if (player.state.name.equals("WALKING")) {
             if (player.x < Config.LEFT_BOUNDARY) {
-                //
+                if (player.movedLeft){
+                    background.x += (int) player.speed;
+                }
             } else if (player.x > Config.RIGHT_BOUNDARY) {
-                background.x = player.x - (player.x-Config.RIGHT_BOUNDARY + Config.INIT_BG_X);
+                if (player.movedRight){
+                    background.x -= (int) player.speed;
+                }
             }
         }
     }

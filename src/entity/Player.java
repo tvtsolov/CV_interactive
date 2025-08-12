@@ -26,6 +26,8 @@ public class Player extends Entity{
     private int scale;
     public Direction direction;
     public boolean animateSittingDown = false;
+    public boolean movedRight = false;
+    public boolean movedLeft = false;
 
 
     public Player(GamePanel gp, KeyHandler keyH){
@@ -81,15 +83,24 @@ public class Player extends Entity{
 
     private void updatePosition(){
         if(state.name.equals("WALKING")){
-
-            if((x < Config.RIGHT_BOUNDARY+1 && direction == Direction.RIGHT) || (x > Config.LEFT_BOUNDARY-1 && direction == Direction.LEFT)) {
+            movedLeft = false;
+            movedRight = false;
+            //if((x < Config.RIGHT_BOUNDARY+1 && direction == Direction.RIGHT) || (x > Config.LEFT_BOUNDARY-1 && direction == Direction.LEFT)) {
                 if (direction == Direction.RIGHT) {
-                    x += (int) speed;
-                } else if (direction == Direction.LEFT) {
-                    x -= (int) speed;
+
+                    movedRight = true;
+                    if (x < Config.RIGHT_BOUNDARY+1 && direction == Direction.RIGHT) {
+                        x += (int) speed;
+                    }
+                } else {
+                    movedLeft = true;
+                    if (x > Config.LEFT_BOUNDARY-1 && direction == Direction.LEFT) {
+                        x -= (int) speed;
+                    }
+
                 }
             }
-        }
+
     }
 
     private void setPlayerImage() {
