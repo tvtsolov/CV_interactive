@@ -85,14 +85,20 @@ abstract public class Animatable {
 
         Entity.Direction dir = Entity.Direction.RIGHT;
 
+        Composite original = g2.getComposite();
+
         if (image != null) {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
             g2.drawImage(image, x, y, width, height, null);
         } else {
             System.out.println("Warning: image is null, cannot draw.");
         }
+        g2.setComposite(original);
+
     }
 
+
+    //fade in or out
     public void fade(boolean fadeOut){
         if (fadeOut) {
             if (alpha > 0) {

@@ -27,6 +27,7 @@ public class AnimationManager {
     BufferedImage[] tutorialSprites;
     Animation tutorial;
 
+
     public Player player;
 
     public AnimationManager(GamePanel gp, Player player){

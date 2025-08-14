@@ -78,6 +78,4 @@ public class Animation extends Animatable {
             spriteCounter = 0;
         }
     }
-
-
 }
