@@ -14,9 +14,9 @@ abstract public class Animatable {
     public int y;
     public float speed;
     public int spriteCounter = 0;
+    public float alpha = 1f;
 
-
-    boolean active = false;
+    public boolean active = true;
 
     public BufferedImage[] sprites;
     public int currentFrame = 1;
@@ -58,6 +58,7 @@ abstract public class Animatable {
         }
     }
 
+
     // draw a given image only, with a given scale
     public void draw(Graphics2D g2, BufferedImage image, int x, int y, int scaleVal){
         int scale = scaleVal;
@@ -68,4 +69,43 @@ abstract public class Animatable {
         }
     }
 
+    //draw with fade effect
+    public void draw(Graphics2D g2, int x, int y, int width, int height, boolean fadeOut){
+        BufferedImage image = sprites[currentFrame-1];
+        int scale = Config.SCALE;
+
+        fade(fadeOut);
+
+        if(width==0){
+            width = image.getWidth() * scale;
+        }
+        if(height==0){
+            height = image.getHeight() * scale;
+        }
+
+        Entity.Direction dir = Entity.Direction.RIGHT;
+
+        if (image != null) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+            g2.drawImage(image, x, y, width, height, null);
+        } else {
+            System.out.println("Warning: image is null, cannot draw.");
+        }
+    }
+
+    public void fade(boolean fadeOut){
+        if (fadeOut) {
+            if (alpha > 0) {
+                alpha -= 0.01f;
+                if (alpha < 0f) alpha = 0f;
+            } else {
+                active = false;
+            }
+        } else {
+            if (alpha < 1f) {
+                alpha += 0.01f;
+                if (alpha > 1f) alpha = 1f;
+            }
+        }
+    }
 }

@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class AnimationManager {
 
@@ -46,6 +48,8 @@ public class AnimationManager {
                 }
             }
         }
+
+
     }
 
     public void getAssets() {
@@ -60,7 +64,7 @@ public class AnimationManager {
 
             tutorialSprites[0] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/buttons/dir_buttons1.png")));
             tutorialSprites[1] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/buttons/dir_buttons2.png")));
-            tutorial = new Animation(tutorialSprites, 100, 100, 0.13F);
+            tutorial = new Animation(tutorialSprites, 100, 100, 0.13F); // these coordinates are always relative to the window
         }
         catch(IOException e){
             e.printStackTrace();
@@ -70,6 +74,9 @@ public class AnimationManager {
     // for each visible animatable in the array, we need to
     // activate/deactivate the animatable
     // make it update its frames - internal to the animation?
+
+
+
 
     // run all animatable objects if they are active:
     public void draw(Graphics2D g2){
@@ -85,14 +92,34 @@ public class AnimationManager {
             System.out.println("Warning: background is null, cannot draw.");
         }
 
-        // background.draw(g2, 0, -500);  // using the bg animation
-
         // draw the rest
-        tutorial.draw(g2, tutorial.x, tutorial.y, 0,0);
-        tutorial.updateFrame();
+        if (tutorial.active) {
+            if (player.x > Config.LEFT_BOUNDARY && player.x < Config.RIGHT_BOUNDARY)
+                tutorial.draw(g2, tutorial.x, tutorial.y, 0, 0);
+            else {
+                //if we want it to fade in or out:
+                tutorial.draw(g2, tutorial.x, tutorial.y, 0, 0, true);
+            }
+            tutorial.updateFrame();
+        }
 
     }
 
 
 
 }
+
+
+// I'm just gonna ... leave the here...
+//        Timer t = new Timer();
+//        t.scheduleAtFixedRate(new TimerTask() {
+//            int count = 0;
+//
+//            @Override
+//            public void run() {
+//                count ++;
+//                if (count >=5){
+//                    t.cancel();
+//                }
+//            }
+//        },0, 3000);

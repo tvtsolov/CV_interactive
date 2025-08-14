@@ -18,6 +18,7 @@ public class Animation extends Animatable {
     public int timer = 0;
     public float step = 6;
 
+
     public boolean animationPaused = false;
 
     public int size;
@@ -76,7 +77,6 @@ public class Animation extends Animatable {
             }
             spriteCounter = 0;
         }
-
     }
 
 

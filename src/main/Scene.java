@@ -5,6 +5,7 @@ import entity.Animatable;
 public class Scene {
 
     // used to update all elements coordinates relative to the background
+    // this is currently handled the animation manager object: updateAnimationsPositions()
 
     Animation background;
     Animatable[] animations;
