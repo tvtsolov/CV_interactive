@@ -1,12 +1,11 @@
-package entity;
+package animations;
 
-import main.Animation;
 import main.Config;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-abstract public class Animatable {
+abstract public  class Animatable {
 
     public Animation[] frames;
 
@@ -115,3 +114,4 @@ abstract public class Animatable {
         }
     }
 }
+

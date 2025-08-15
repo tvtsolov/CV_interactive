@@ -1,6 +1,7 @@
 package main;
 
-import entity.Animatable;
+import animations.Animatable;
+import animations.Animation;
 
 public class Scene {
 

@@ -1,12 +1,13 @@
 package main;
 
 
-import entity.Player;
+import Handlers.AnimationManager;
+import Handlers.Assets;
+import Handlers.KeyHandler;
+import animations.Player;
 
 import javax.swing.JPanel;
 import java.awt.*;
-import java.security.Key;
-import java.sql.SQLOutput;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -22,7 +23,7 @@ public class GamePanel extends JPanel implements Runnable {
     Player player = new Player(this, keyH);
     AnimationManager anManager = new AnimationManager(this, player);
 
-        
+
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.gray);
@@ -31,7 +32,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
     }
 
-    public void startGameThread(){
+    public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start(); // calls the run method automatically
     }
@@ -72,18 +73,18 @@ public class GamePanel extends JPanel implements Runnable {
 //    }
 
     //------------------SECOND ALTERNATIVE, USING DELTA TIME--------------------//
-    public void run(){
+    public void run() {
 
-        double drawInterval = 1000000000/FPS;
+        double drawInterval = 1000000000 / FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
-        while(gameThread != null) {
+        while (gameThread != null) {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
 
-            if(delta >= 1){
+            if (delta >= 1) {
                 update();
                 repaint(); // asks Swing to redraw the screen, eventually this calls paintComponent
                 delta--;
@@ -91,15 +92,15 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void update(){
+    public void update() {
         player.update();
         anManager.updateAnimationsPositions();
     }
 
-    public void paintComponent(Graphics g){
+    public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D)g;
+        Graphics2D g2 = (Graphics2D) g;
 
         anManager.draw(g2);
         player.draw(g2);
@@ -108,3 +109,4 @@ public class GamePanel extends JPanel implements Runnable {
 
     }
 }
+

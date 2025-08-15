@@ -1,6 +1,4 @@
-package entity;
-
-import java.awt.image.BufferedImage;
+package animations;
 
 public class Entity {
 

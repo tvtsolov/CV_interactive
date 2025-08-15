@@ -1,5 +1,7 @@
-package entity;
+package animations;
 
+import Handlers.KeyHandler;
+import Handlers.StateManager;
 import main.*;
 
 import javax.imageio.ImageIO;
@@ -156,4 +158,6 @@ public class Player extends Entity{
         BufferedImage image = null;
 
     }
+
+
 }

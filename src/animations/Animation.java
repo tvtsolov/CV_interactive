@@ -1,13 +1,9 @@
-package main;
+package animations;
 
-import entity.Animatable;
-import entity.Entity;
-
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-public class Animation extends Animatable {
+public  class Animation extends Animatable {
 
     //public static int priority;  // to be used as depth
 
@@ -79,3 +75,5 @@ public class Animation extends Animatable {
         }
     }
 }
+
+

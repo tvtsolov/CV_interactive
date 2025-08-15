@@ -1,5 +1,7 @@
 package main;
 
+import animations.Animation;
+
 import java.awt.image.BufferedImage;
 
 public class State {

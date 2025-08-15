@@ -1,7 +1,7 @@
-package main;
+package Handlers;
 
-import entity.Entity;
-import entity.Player;
+import animations.Entity;
+import animations.Player;
 
 public class StateManager {
 
