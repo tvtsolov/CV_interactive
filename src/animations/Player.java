@@ -13,8 +13,6 @@ public class Player extends Entity{
 
     private GamePanel gp;
     private KeyHandler keyH;
-
-    public final int screenX, screenY;
     private StateManager stateManager;
 
     private BufferedImage[] walkingSprites;
@@ -35,8 +33,6 @@ public class Player extends Entity{
     public Player(GamePanel gp, KeyHandler keyH){
         this.gp = gp;
         this.keyH = keyH;
-        screenX = gp.screenWidth/2;
-        screenY = gp.screenHeight/2;
         setPlayerImage();
         createStates();
         setDefaultValues(); // sets speed as well as X and Y
@@ -48,7 +44,7 @@ public class Player extends Entity{
         y = Config.PLAYER_INIT_POS_Y;
         worldX = 0;
         worldY = 0;
-        scale = Config.SCALE;
+        scale = Config.SCALE * 2;
         speed = Config.PLAYER_SPEED;
         direction = Direction.RIGHT;
         setState("SAT");
@@ -153,7 +149,7 @@ public class Player extends Entity{
         Animation currentAnimation = state.getAnimation();
         Direction currentDirection = direction;
 
-        state.animation.draw(g2, x, y, direction);
+        state.animation.draw(g2, x, y, direction, this.scale);
 
         BufferedImage image = null;
 

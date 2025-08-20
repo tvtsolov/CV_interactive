@@ -102,7 +102,8 @@ public class AnimationManager {
             int width = Config.BG_WIDTH;
             int height = Config.BG_HEIGHT;
 
-            backgroundAnimation.draw(g2, backgroundAnimation.x, backgroundAnimation.y, width,height);
+            backgroundAnimation.draw(g2, backgroundAnimation.x, backgroundAnimation.y, width, height);
+
 
         } else {
             System.out.println("Warning: background is null, cannot draw.");

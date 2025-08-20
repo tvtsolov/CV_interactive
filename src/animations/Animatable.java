@@ -24,12 +24,31 @@ abstract public  class Animatable {
     public void draw(Graphics2D g2, int x, int y, Entity.Direction dir){
         BufferedImage image = sprites[currentFrame-1];
         int scale = Config.SCALE;
+        int w = image.getWidth();
+        int h = image.getHeight();
         if (image != null) {
             if (dir == Entity.Direction.LEFT)
             {
-                g2.drawImage(image, x + image.getWidth()*scale , y, -image.getWidth() * scale, image.getHeight() * scale, null);
+                g2.drawImage(image, x + w * scale , y, -w * scale, h * scale, null);
             } else {
-                g2.drawImage(image, x, y, image.getWidth() * scale, image.getHeight() * scale, null);
+                g2.drawImage(image, x, y, w * scale, h * scale, null);
+            }
+        } else {
+            System.out.println("Warning: image is null, cannot draw.");
+        }
+    }
+
+    public void draw(Graphics2D g2, int x, int y, Entity.Direction dir, int customScale){
+        BufferedImage image = sprites[currentFrame-1];
+        int scale = Config.SCALE;
+        int w = image.getWidth();
+        int h = image.getHeight();
+        if (image != null) {
+            if (dir == Entity.Direction.LEFT)
+            {
+                g2.drawImage(image, x + w * customScale , y, -w * customScale, h * customScale, null);
+            } else {
+                g2.drawImage(image, x, y, w * customScale, h * customScale, null);
             }
         } else {
             System.out.println("Warning: image is null, cannot draw.");
@@ -51,7 +70,7 @@ abstract public  class Animatable {
         Entity.Direction dir = Entity.Direction.RIGHT;
 
         if (image != null) {
-            g2.drawImage(image, x, y, width, height, null);
+            g2.drawImage(image, x, y, width * scale, height * scale, null);
         } else {
             System.out.println("Warning: image is null, cannot draw.");
         }
@@ -59,10 +78,9 @@ abstract public  class Animatable {
 
 
     // draw a given image only, with a given scale
-    public void draw(Graphics2D g2, BufferedImage image, int x, int y, int scaleVal){
-        int scale = scaleVal;
+    public void draw(Graphics2D g2, BufferedImage image, int x, int y, int customScale){
         if (image != null){
-            g2.drawImage(image, x + image.getWidth()*scale , y, -image.getWidth() * scale, image.getHeight() * scale, null);
+            g2.drawImage(image, x + image.getWidth()* customScale , y, -image.getWidth() * customScale, image.getHeight() * customScale, null);
         } else {
             System.out.println("Warning: image is null, cannot draw.");
         }

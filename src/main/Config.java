@@ -1,24 +1,42 @@
 package main;
 
+import Handlers.Assets;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public final class Config {
 
-    public static int SCALE = 3;
+    public static int SCALE = 2;
 
-    public static final int screenWidth = 500;
-    public static final int screenHeight = 250;
+    public static final int screenWidth = 1000;
+    public static final int screenHeight = 500;
 
-    public static int PLAYER_INIT_POS_X = 100;
-    public static int PLAYER_INIT_POS_Y = screenHeight * SCALE - 215;
-    public static float PLAYER_SPEED = 3F;
-
-    // scale 2 measurements for BG
-    static public int BG_WIDTH = 2250;
-    static public int BG_HEIGHT = 750;
+    static public int BG_WIDTH = 1380;
+    static public int BG_HEIGHT = 500;
     static public int INIT_BG_X = -375;
     public static int INIT_BG_Y = 0;
+
+    public static BufferedImage plImage;
+
+    static {
+        try {
+            plImage = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/player/walk/wlk1.png")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static int playerSpriteYSize = plImage.getHeight()*SCALE;
+    public static int PLAYER_INIT_POS_X = 30 * SCALE;
+    public static int PLAYER_INIT_POS_Y = (BG_HEIGHT * SCALE) - playerSpriteYSize * SCALE;
+    public static float PLAYER_SPEED = 3F;
+
+
 
     //cat movement boundaries that trigger the camera movement
     static public int LEFT_BOUNDARY = 0;
@@ -59,5 +77,6 @@ public final class Config {
     }
 
 
-
+    public Config() throws IOException {
+    }
 }
