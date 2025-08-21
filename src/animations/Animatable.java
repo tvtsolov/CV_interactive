@@ -91,7 +91,7 @@ abstract public  class Animatable {
         BufferedImage image = sprites[currentFrame-1];
         int scale = Config.SCALE;
 
-        fade(fadeOut);
+        setAlpha(fadeOut);
 
         if(width==0){
             width = image.getWidth() * scale;
@@ -106,17 +106,16 @@ abstract public  class Animatable {
 
         if (image != null) {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-            g2.drawImage(image, x, y, width, height, null);
+            g2.drawImage(image, x, y, width * scale, height * scale, null);
         } else {
             System.out.println("Warning: image is null, cannot draw.");
         }
         g2.setComposite(original);
-
     }
 
 
     //fade in or out
-    public void fade(boolean fadeOut){
+    public void setAlpha(boolean fadeOut){
         if (fadeOut) {
             if (alpha > 0) {
                 alpha -= 0.01f;

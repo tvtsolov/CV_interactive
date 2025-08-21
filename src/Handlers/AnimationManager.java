@@ -102,7 +102,30 @@ public class AnimationManager {
             int width = Config.BG_WIDTH;
             int height = Config.BG_HEIGHT;
 
+            System.out.println("BG X is: " + backgroundAnimation.x);
+
+
+            //draw first and middle panel background
             backgroundAnimation.draw(g2, backgroundAnimation.x, backgroundAnimation.y, width, height);
+
+
+            //draw left panel background or right panel based on the position of the main background sprite
+            if(backgroundAnimation.x > 5) {
+                backgroundAnimation.draw(g2, backgroundAnimation.x - width * Config.SCALE, backgroundAnimation.y, width, height);
+            }  else if(backgroundAnimation.x < -700) {  // draw right panel
+                backgroundAnimation.draw(g2, backgroundAnimation.x + width * Config.SCALE, backgroundAnimation.y, width, height);
+            }
+
+            //reset middle bg sprite position
+            if(backgroundAnimation.x > 2050){
+                backgroundAnimation.x = backgroundAnimation.x - width * Config.SCALE;
+            }
+            if(backgroundAnimation.x < - 2800){
+                backgroundAnimation.x = backgroundAnimation.x + width * Config.SCALE;
+            }
+
+
+            //draw right panel background
 
 
         } else {

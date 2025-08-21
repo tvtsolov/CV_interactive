@@ -130,6 +130,7 @@ public class Player extends Entity{
         stateManager.run();
         updatePosition();
         state.animation.updateFrame();
+
     }
 
     public void draw(Graphics2D g2){

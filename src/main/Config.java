@@ -18,6 +18,7 @@ public final class Config {
 
     static public int BG_WIDTH = 1380;
     static public int BG_HEIGHT = 500;
+
     static public int INIT_BG_X = -375;
     public static int INIT_BG_Y = 0;
 
