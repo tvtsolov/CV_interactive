@@ -1,7 +1,7 @@
 package Handlers;
 
 import animations.Animation;
-import animations.FramedPicture;
+import animations.Phase;
 import animations.Player;
 import main.Config;
 import main.GamePanel;
@@ -25,7 +25,7 @@ public class AnimationManager {
     Animation backgroundAnimation;
     BufferedImage[] tutorialSprites;
     Animation tutorial;
-    FramedPicture[] pictures;
+    Phase[] phases = Assets.phases;
 
     private boolean tutorialFading = false;
     public Player player;
@@ -37,7 +37,6 @@ public class AnimationManager {
         backgroundImage = Assets.backgroundImage;
         backgroundAnimation = Assets.backgroundAnimation;
         tutorial = Assets.tutorial;
-        pictures = Assets.pictures;
         tutorialSprites = Assets.tutorialSprites;
     }
 
@@ -102,12 +101,8 @@ public class AnimationManager {
             int width = Config.BG_WIDTH;
             int height = Config.BG_HEIGHT;
 
-            System.out.println("BG X is: " + backgroundAnimation.x);
-
-
             //draw first and middle panel background
             backgroundAnimation.draw(g2, backgroundAnimation.x, backgroundAnimation.y, width, height);
-
 
             //draw left panel background or right panel based on the position of the main background sprite
             if(backgroundAnimation.x > 5) {
@@ -123,10 +118,13 @@ public class AnimationManager {
             if(backgroundAnimation.x < - 2800){
                 backgroundAnimation.x = backgroundAnimation.x + width * Config.SCALE;
             }
+            System.out.println("BG middle X is " + backgroundAnimation.x );
 
+            for(int i = 1; i < phases.length; i++){
 
-            //draw right panel background
-
+                //phases[i].picture.draw();
+                //phases[i].textBox.draw();
+            }
 
         } else {
             System.out.println("Warning: background is null, cannot draw.");

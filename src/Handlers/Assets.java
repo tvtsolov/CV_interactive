@@ -1,8 +1,7 @@
 package Handlers;
 
 import animations.Animation;
-import animations.FramedPicture;
-import animations.TextBox;
+import animations.Phase;
 import main.Config;
 
 import javax.imageio.ImageIO;
@@ -16,46 +15,103 @@ public class Assets{
     public static Animation backgroundAnimation;
     public static BufferedImage[] tutorialSprites;
     public static Animation tutorial;
-    public static FramedPicture[] pictures;
+    public static Phase[] phases = new Phase[8];
 
     public static void load(float speed) {
 
         tutorialSprites = new BufferedImage[2];
 
         try {
-            backgroundImage = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/background/test-bg.png")));
+                backgroundImage = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/background/test-bg.png")));
 
-            backgroundAnimation = new Animation(backgroundImage, Config.INIT_BG_X, Config.INIT_BG_Y, speed);
+                backgroundAnimation = new Animation(backgroundImage, Config.INIT_BG_X, Config.INIT_BG_Y, speed);
 
-            tutorialSprites[0] = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
-            tutorialSprites[1] = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons2.png")));
-            tutorial = new Animation(tutorialSprites, 100, 100, 0.13F); // these coordinates are always relative to the window
+                tutorialSprites[0] = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
+                tutorialSprites[1] = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons2.png")));
+                tutorial = new Animation(tutorialSprites, 100, 100, 0.13F); // these coordinates are always relative to the window
 
-            {
-                pictures = new FramedPicture[5];
-                String VTUmessage = Config.TXTBOX_MESSAGES.get("VTU");
-                BufferedImage pictureVTU = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));             //todo I don't have a sprite for it yet
-                TextBox textBoxVTU = new TextBox(VTUmessage);
-                FramedPicture VTU = new FramedPicture("VTU", textBoxVTU, pictureVTU, 0, 0);
+                //phase 0 (a welcome message first?)
+
+                //phase1
+//                BufferedImage picSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/phases/pics/pic1/pic1.png")));
+//                Animation picAnimation = new Animation(picSprite);
+//                BufferedImage textBoxSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/phases/textboxes/box1/textbox1.png")));
+//                Animation textBox = new Animation(textBoxSprite);
+//                Phase ph = new Phase(textBox, 0, 0, picAnimation, 0,0 );
+//                phases[1] = ph;
+
+                for(int i = 1; i < phases.length; i++){
+                    Animation pictureAnimation;
+                    if(i != 4 && i != 6 && i !=7) {
+                        String picPath = "/phases/pics/pic" + i + "/pic" + i + ".png";
+                        BufferedImage picSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream(picPath)));
+                        pictureAnimation = new Animation(picSprite);
+                    } else {
+                        String picPath1 = "/phases/pics/pic" + i + "/pic" + i + "-1.png";
+                        String picPath2 = "/phases/pics/pic" + i + "/pic" + i + "-2.png";
+                        BufferedImage picSprite1 = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream(picPath1)));
+                        BufferedImage picSprite2 = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream(picPath2)));
+                        BufferedImage[] sprites = new BufferedImage[2];
+                        sprites[0] = picSprite1;
+                        sprites[1] = picSprite2;
+                        pictureAnimation = new Animation(sprites);
+                    }
+                    String textBoxPath = "/phases/textboxes/box"+ i + "/textbox" + i + ".png";
+                    BufferedImage textBoxSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream(textBoxPath)));
+                    Animation textBox = new Animation(textBoxSprite);
+                    Phase ph = new Phase(textBox, 0, 0, pictureAnimation, 0,0 );
+                    phases[i] = ph;
+
+                }
 
 
-                String NBUmessage = Config.TXTBOX_MESSAGES.get("NBU");
-                BufferedImage pictureNBU = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));             //todo I don't have a sprite for it yet
-                TextBox textBoxNBU = new TextBox(NBUmessage);
-                FramedPicture NBU = new FramedPicture("NBU", textBoxNBU, pictureNBU, 0, 0);
-
-
-                String psyWorkMessage = Config.TXTBOX_MESSAGES.get("psyWork");
-                BufferedImage picturePsyWork = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));             //todo I don't have a sprite for it yet
-                TextBox textBoxPsyWork = new TextBox(psyWorkMessage);
-                FramedPicture psyWork = new FramedPicture("psyWork", textBoxPsyWork, picturePsyWork, 0, 0);
-
-
-            }
-
-
-
-
+//                //phase2
+//                BufferedImage picSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
+//                Animation picAnimation = new Animation(picSprite);
+//                BufferedImage textBoxSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
+//                Animation textBox = new Animation(textBoxSprite);
+//                Phase ph = new Phase(textBox, 0, 0, picAnimation, 0,0 );
+//                phases[2] = ph;
+//
+//                //phase3
+//                BufferedImage picSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
+//                Animation picAnimation = new Animation(picSprite);
+//                BufferedImage textBoxSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
+//                Animation textBox = new Animation(textBoxSprite);
+//                Phase ph = new Phase(textBox, 0, 0, picAnimation, 0,0 );
+//                phases[3] = ph;
+//
+//                //phase4
+//                BufferedImage picSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
+//                Animation picAnimation = new Animation(picSprite);
+//                BufferedImage textBoxSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
+//                Animation textBox = new Animation(textBoxSprite);
+//                Phase ph = new Phase(textBox, 0, 0, picAnimation, 0,0 );
+//                phases[4] = ph;
+//
+//                //phase5
+//                BufferedImage picSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
+//                Animation picAnimation = new Animation(picSprite);
+//                BufferedImage textBoxSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
+//                Animation textBox = new Animation(textBoxSprite);
+//                Phase ph = new Phase(textBox, 0, 0, picAnimation, 0,0 );
+//                phases[5] = ph;
+//
+//                //phase6
+//                BufferedImage picSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
+//                Animation picAnimation = new Animation(picSprite);
+//                BufferedImage textBoxSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
+//                Animation textBox = new Animation(textBoxSprite);
+//                Phase ph = new Phase(textBox, 0, 0, picAnimation, 0,0 );
+//                phases[6] = ph;
+//
+//                //phase7
+//                BufferedImage picSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
+//                Animation picAnimation = new Animation(picSprite);
+//                BufferedImage textBoxSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
+//                Animation textBox = new Animation(textBoxSprite);
+//                Phase ph = new Phase(textBox, 0, 0, picAnimation, 0,0 );
+//                phases[7] = ph;
 
         }
         catch(IOException e){
