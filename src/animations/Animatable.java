@@ -60,12 +60,7 @@ abstract public  class Animatable {
         BufferedImage image = sprites[currentFrame-1];
         int scale = Config.SCALE;
 
-        if(width==0){
-            width = image.getWidth() * scale;
-        }
-        if(height==0){
-            height = image.getHeight() * scale;
-        }
+
 
         Entity.Direction dir = Entity.Direction.RIGHT;
 
@@ -110,6 +105,7 @@ abstract public  class Animatable {
         } else {
             System.out.println("Warning: image is null, cannot draw.");
         }
+
         g2.setComposite(original);
     }
 

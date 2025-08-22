@@ -44,7 +44,7 @@ public class Player extends Entity{
         y = Config.PLAYER_INIT_POS_Y;
         worldX = 0;
         worldY = 0;
-        scale = Config.SCALE * 2;
+        scale = Config.SCALE;
         speed = Config.PLAYER_SPEED;
         direction = Direction.RIGHT;
         setState("SAT");

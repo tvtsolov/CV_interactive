@@ -105,20 +105,21 @@ public class AnimationManager {
             backgroundAnimation.draw(g2, backgroundAnimation.x, backgroundAnimation.y, width, height);
 
             //draw left panel background or right panel based on the position of the main background sprite
-            if(backgroundAnimation.x > 5) {
+            if(backgroundAnimation.x > Config.DRAW_BG_LEFT_BOUND) {
                 backgroundAnimation.draw(g2, backgroundAnimation.x - width * Config.SCALE, backgroundAnimation.y, width, height);
-            }  else if(backgroundAnimation.x < -700) {  // draw right panel
+            }  else if(backgroundAnimation.x < Config.DRAW_BG_RIGHT_BOUND) {  // draw right panel
                 backgroundAnimation.draw(g2, backgroundAnimation.x + width * Config.SCALE, backgroundAnimation.y, width, height);
             }
 
             //reset middle bg sprite position
-            if(backgroundAnimation.x > 2050){
+            if(backgroundAnimation.x > 1025 * Config.SCALE){
                 backgroundAnimation.x = backgroundAnimation.x - width * Config.SCALE;
             }
-            if(backgroundAnimation.x < - 2800){
+            if(backgroundAnimation.x < - 1400 * Config.SCALE){
                 backgroundAnimation.x = backgroundAnimation.x + width * Config.SCALE;
             }
             System.out.println("BG middle X is " + backgroundAnimation.x );
+            //System.out.println("Player X is " + player.x);
 
             for(int i = 1; i < phases.length; i++){
 
@@ -133,11 +134,11 @@ public class AnimationManager {
         // draw the rest
         if (tutorial.active) {
             if ((player.x > Config.LEFT_BOUNDARY && player.x < Config.RIGHT_BOUNDARY) && !tutorialFading)
-                tutorial.draw(g2, tutorial.x, tutorial.y, 0, 0);
+                tutorial.draw(g2, tutorial.x, tutorial.y, tutorial.sprites[0].getWidth(), tutorial.sprites[0].getHeight());
             else {
                 //if we want it to fade in or out:
                 tutorialFading = true;
-                tutorial.draw(g2, tutorial.x, tutorial.y, 0, 0, true);
+                tutorial.draw(g2, tutorial.x, tutorial.y, tutorial.sprites[0].getWidth(),  tutorial.sprites[0].getHeight(), true);
             }
             tutorial.updateFrame();
         }
