@@ -8,6 +8,8 @@ import main.GamePanel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class AnimationManager {
 
@@ -26,6 +28,9 @@ public class AnimationManager {
     BufferedImage[] tutorialSprites;
     Animation tutorial;
     Phase[] phases = Assets.phases;
+    Deque<Phase> future;
+    Deque<Phase> past;
+    Deque<Phase> drawn = new ArrayDeque<>();
 
     private boolean tutorialFading = false;
     public Player player;
@@ -38,6 +43,8 @@ public class AnimationManager {
         backgroundAnimation = Assets.backgroundAnimation;
         tutorial = Assets.tutorial;
         tutorialSprites = Assets.tutorialSprites;
+        future = Assets.future;
+        past = Assets.past;
     }
 
     public void updateAnimationsPositions(){
@@ -46,51 +53,38 @@ public class AnimationManager {
             if (player.x < Config.LEFT_BOUNDARY) {
                 if (player.movedLeft){
                     backgroundAnimation.x += (int) player.speed;
+
+                    if (!drawn.isEmpty()) {
+                        if (drawn.size() == 1) {
+                            drawn.peekFirst().picture.x += (int) player.speed;
+                            drawn.peekFirst().textBox.x += (int) player.speed;
+                        } else if (drawn.size() == 2) {
+                            drawn.peekFirst().picture.x += (int) player.speed;
+                            drawn.peekFirst().textBox.x += (int) player.speed;
+                            drawn.peekLast().picture.x += (int) player.speed;
+                            drawn.peekLast().textBox.x += (int) player.speed;
+                        }
+                    }
                 }
             } else if (player.x > Config.RIGHT_BOUNDARY) {
                 if (player.movedRight){
                     backgroundAnimation.x -= (int) player.speed;
+
+                    if (!drawn.isEmpty()) {
+                        if (drawn.size() == 1) {
+                            drawn.peekFirst().picture.x -= (int) player.speed;
+                            drawn.peekFirst().textBox.x -= (int) player.speed;
+                        } else if (drawn.size() == 2) {
+                            drawn.peekFirst().picture.x -= (int) player.speed;
+                            drawn.peekFirst().textBox.x -= (int) player.speed;
+                            drawn.peekLast().picture.x -= (int) player.speed;
+                            drawn.peekLast().textBox.x -= (int) player.speed;
+                        }
+                    }
                 }
             }
         }
-
-
     }
-
-//    public void loadAssets() {
-//
-//        tutorialSprites = new BufferedImage[2];
-//
-//        try {
-//            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/background/test-bg.png")));
-//
-//            background = new Animation(backgroundImage, Config.INIT_BG_X, Config.INIT_BG_Y, player.speed);
-//
-//            tutorialSprites[0] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/buttons/dir_buttons1.png")));
-//            tutorialSprites[1] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/buttons/dir_buttons2.png")));
-//            tutorial = new Animation(tutorialSprites, 100, 100, 0.13F); // these coordinates are always relative to the window
-//
-//            pictures = new FramedPicture[5];
-//            String VTUmessage = Config.TXTBOX_MESSAGES.get("VTU");
-//            //TODO
-//            BufferedImage pictureVTU = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/buttons/dir_buttons1.png")));
-//            TextBox textBoxVTU = new TextBox(VTUmessage);
-//            FramedPicture VTU = new FramedPicture("VTU", textBoxVTU, pictureVTU, 0,0);
-//
-//
-//
-//
-//        }
-//        catch(IOException e){
-//            e.printStackTrace();
-//        }
-//    }
-
-    // for each visible animatable in the array, we need to
-    // activate/deactivate the animatable
-    // make it update its frames - internal to the animation?
-
-
 
 
     // run all animatable objects if they are active:
@@ -121,17 +115,12 @@ public class AnimationManager {
             System.out.println("BG middle X is " + backgroundAnimation.x );
             //System.out.println("Player X is " + player.x);
 
-            for(int i = 1; i < phases.length; i++){
-
-                //phases[i].picture.draw();
-                //phases[i].textBox.draw();
-            }
-
         } else {
             System.out.println("Warning: background is null, cannot draw.");
         }
 
         // draw the rest
+
         if (tutorial.active) {
             if ((player.x > Config.LEFT_BOUNDARY && player.x < Config.RIGHT_BOUNDARY) && !tutorialFading)
                 tutorial.draw(g2, tutorial.x, tutorial.y, tutorial.sprites[0].getWidth(), tutorial.sprites[0].getHeight());
@@ -143,7 +132,55 @@ public class AnimationManager {
             tutorial.updateFrame();
         }
 
+
+        Phase currentlyDrawn;
+        if(drawn.isEmpty()){                // add the first phase
+            currentlyDrawn = future.pollFirst();
+            if(currentlyDrawn != null) {
+                currentlyDrawn.picture.x = Config.INIT_MIDPIC_X;
+                currentlyDrawn.picture.y = Config.INIT_MIDPIC_Y;
+                currentlyDrawn.textBox.x = currentlyDrawn.picture.x + currentlyDrawn.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET * Config.SCALE;
+                currentlyDrawn.textBox.y = currentlyDrawn.picture.y;
+            }
+            drawn.addFirst(currentlyDrawn);
+        }
+                                            //draw one phase
+        if(!drawn.isEmpty()) {
+
+            Phase phaseToDraw1 = drawn.peekFirst();
+            int offset = phaseToDraw1.picture.x + phaseToDraw1.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET + phaseToDraw1.textBox.sprites[0].getWidth() * Config.SCALE + Config.PIC_AREA_OFFSET;
+
+            phaseToDraw1.picture.draw(g2, phaseToDraw1.picture.x, phaseToDraw1.picture.y, phaseToDraw1.picture.sprites[0].getWidth(), phaseToDraw1.picture.sprites[0].getHeight());
+            phaseToDraw1.picture.updateFrame(); // in case the animation is dynamic this will animate it
+            phaseToDraw1.textBox.draw(g2, phaseToDraw1.textBox.x + Config.PIC_TEXTBOX_OFFSET, phaseToDraw1.textBox.y, phaseToDraw1.textBox.sprites[0].getWidth(), phaseToDraw1.textBox.sprites[0].getHeight());
+
+            if ((phaseToDraw1.picture.x < 20) && (drawn.size() < 2) && (!future.isEmpty())) { // add second phase if there isn't any added and if future is not empty
+
+                Phase phaseToAdd = future.pollFirst();
+
+                phaseToAdd.picture.x = phaseToDraw1.picture.x + offset;
+                phaseToAdd.picture.y = Config.INIT_MIDPIC_Y;
+                phaseToAdd.textBox.x = phaseToAdd.picture.x + phaseToAdd.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET * Config.SCALE;
+                phaseToAdd.textBox.y = phaseToAdd.picture.y;
+                drawn.addLast(phaseToAdd);
+            }
+
+            if (drawn.size() == 2){
+
+                Phase phaseToDraw2 = drawn.peekLast();
+                if (phaseToDraw2 != null) {
+                    phaseToDraw1 = drawn.peekFirst();
+
+                    phaseToDraw2.picture.draw(g2, phaseToDraw2.picture.x, phaseToDraw2.picture.y, phaseToDraw2.picture.sprites[0].getWidth(), phaseToDraw2.picture.sprites[0].getHeight());
+                    phaseToDraw2.picture.updateFrame(); // in case the animation is dynamic this will animate it
+                    phaseToDraw2.textBox.draw(g2, phaseToDraw2.textBox.x + Config.PIC_TEXTBOX_OFFSET, phaseToDraw2.textBox.y, phaseToDraw2.textBox.sprites[0].getWidth(), phaseToDraw2.textBox.sprites[0].getHeight());
+                }
+            }
+
+        }
     }
+
+//if future.isEmpty();
 
 
 }

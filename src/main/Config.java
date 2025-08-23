@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public final class Config {
 
-    public static final int SCALE = 2;
+    public static final int SCALE = 1;
 
     public static final int screenWidth = 1000;
     public static final int screenHeight = 500;
@@ -23,8 +23,20 @@ public final class Config {
     static public int BG_WIDTH = 1380;
     static public int BG_HEIGHT = 500;
 
-    static public int INIT_BG_X = -375;
-    public static int INIT_BG_Y = 0;
+    static public int PIC_TEXTBOX_OFFSET    = 20 * SCALE;
+    static public int PIC_AREA_OFFSET       = 70 * SCALE;
+
+    static public int INIT_LEFTPIC_X        = 500 * SCALE;
+    static public int INIT_LEFTPIC_Y        = 0 * SCALE;
+
+    static public int INIT_MIDPIC_X         = 500 * SCALE;
+    static public int INIT_MIDPIC_Y         = 0 * SCALE;
+
+    static public int INIT_RIGHTPIC_X       = 0 * SCALE;
+    static public int INIT_RIGHTPIC_Y       = 0 * SCALE;
+
+    static public int INIT_BG_X             = -187 * SCALE;
+    public static int INIT_BG_Y             = 0 * SCALE;
 
     public static BufferedImage plImage;
 
@@ -49,6 +61,5 @@ public final class Config {
     static public int RIGHT_BOUNDARY = 100 * SCALE;
 
 
-    public Config() throws IOException {
-    }
+
 }

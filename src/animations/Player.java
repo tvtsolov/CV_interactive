@@ -83,19 +83,16 @@ public class Player extends Entity{
         if(state.name.equals("WALKING")){
             movedLeft = false;
             movedRight = false;
-            //if((x < Config.RIGHT_BOUNDARY+1 && direction == Direction.RIGHT) || (x > Config.LEFT_BOUNDARY-1 && direction == Direction.LEFT)) {
                 if (direction == Direction.RIGHT) {
-
                     movedRight = true;
-                    if (x < Config.RIGHT_BOUNDARY+1 && direction == Direction.RIGHT) {
+                    if (x < Config.RIGHT_BOUNDARY+speed && direction == Direction.RIGHT) {
                         x += (int) speed;
                     }
-                } else {
+                } else if (direction == Direction.LEFT) {
                     movedLeft = true;
-                    if (x > Config.LEFT_BOUNDARY-1 && direction == Direction.LEFT) {
+                    if (x > Config.LEFT_BOUNDARY-speed && direction == Direction.LEFT) {
                         x -= (int) speed;
                     }
-
                 }
             }
 

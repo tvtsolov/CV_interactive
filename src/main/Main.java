@@ -9,7 +9,7 @@ public class Main {
 
         JFrame window = new JFrame();
         window.setBounds(0, 0, 800, 600);
-        window.setSize(1000, 1000);
+        window.setSize(800, 1000);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false); 
         window.setTitle("Game");
