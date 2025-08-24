@@ -14,14 +14,6 @@ import java.util.Deque;
 public class AnimationManager {
 
 
-    // needs to load all animatable objects
-
-    // buttons
-    // backgroundImage
-    // interactable buttons/triggers bubble boxes
-    // bubble text boxes
-
-
     GamePanel gp;
     BufferedImage backgroundImage;
     Animation backgroundAnimation;
@@ -31,6 +23,8 @@ public class AnimationManager {
     Deque<Phase> future;
     Deque<Phase> past;
     Deque<Phase> drawn = new ArrayDeque<>();
+    Phase left;
+    Phase right;
 
     private boolean tutorialFading = false;
     public Player player;
@@ -46,6 +40,55 @@ public class AnimationManager {
         future = Assets.future;
         past = Assets.past;
     }
+
+
+    // next two functions manage adding and removing the phases that are being drawn
+
+    // when player moving right
+    private void hideLeftAddRight(){
+        if (!future.isEmpty()) {
+
+            past.addLast(drawn.pollFirst());
+            drawn.addLast(future.pollFirst());
+
+            Phase phLeft = drawn.peekFirst();
+            Phase phRight = drawn.peekLast();
+
+            // add coordinates for the new phase (ph) on the right side of the current phase
+            int offset = phLeft.picture.x + phLeft.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET + phLeft.textBox.sprites[0].getWidth() * Config.SCALE + Config.PIC_AREA_OFFSET;
+
+            phRight.picture.x = offset;
+            phRight.picture.y = Config.INIT_MIDPIC_Y;
+            phRight.textBox.x = phRight.picture.x + phRight.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET * Config.SCALE;
+            phRight.textBox.y = phRight.picture.y;
+            //add x and y
+        }
+    }
+
+    // when player moving left
+    private void hideRightAddLeft(){
+        if (!past.isEmpty()){
+
+            int offset = drawn.peekFirst().picture.x + drawn.peekFirst().picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET + drawn.peekFirst().textBox.sprites[0].getWidth() * Config.SCALE + Config.PIC_AREA_OFFSET;
+
+            future.addFirst(drawn.removeLast());
+            drawn.addFirst(past.pollLast());
+
+
+            Phase phLeft = drawn.peekFirst();
+            Phase phRight = drawn.peekLast();
+
+            // add coordinates for the new phase (ph) on the right side of the current phase
+
+
+            phLeft.picture.x = phRight.picture.x - offset - Config.PIC_TEXTBOX_OFFSET;
+            phLeft.picture.y = Config.INIT_MIDPIC_Y;
+            phLeft.textBox.x = phLeft.picture.x + phLeft.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET * Config.SCALE;
+            phLeft.textBox.y = phLeft.picture.y;
+
+        }
+    }
+
 
     public void updateAnimationsPositions(){
 
@@ -90,6 +133,8 @@ public class AnimationManager {
     // run all animatable objects if they are active:
     public void draw(Graphics2D g2){
 
+
+
         // draw the BG
         if (backgroundImage != null){
             int width = Config.BG_WIDTH;
@@ -112,7 +157,8 @@ public class AnimationManager {
             if(backgroundAnimation.x < - 1400 * Config.SCALE){
                 backgroundAnimation.x = backgroundAnimation.x + width * Config.SCALE;
             }
-            System.out.println("BG middle X is " + backgroundAnimation.x );
+
+            //System.out.println("BG middle X is " + backgroundAnimation.x );
             //System.out.println("Player X is " + player.x);
 
         } else {
@@ -132,7 +178,6 @@ public class AnimationManager {
             tutorial.updateFrame();
         }
 
-
         Phase currentlyDrawn;
         if(drawn.isEmpty()){                // add the first phase
             currentlyDrawn = future.pollFirst();
@@ -150,6 +195,8 @@ public class AnimationManager {
             Phase phaseToDraw1 = drawn.peekFirst();
             int offset = phaseToDraw1.picture.x + phaseToDraw1.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET + phaseToDraw1.textBox.sprites[0].getWidth() * Config.SCALE + Config.PIC_AREA_OFFSET;
 
+
+
             phaseToDraw1.picture.draw(g2, phaseToDraw1.picture.x, phaseToDraw1.picture.y, phaseToDraw1.picture.sprites[0].getWidth(), phaseToDraw1.picture.sprites[0].getHeight());
             phaseToDraw1.picture.updateFrame(); // in case the animation is dynamic this will animate it
             phaseToDraw1.textBox.draw(g2, phaseToDraw1.textBox.x + Config.PIC_TEXTBOX_OFFSET, phaseToDraw1.textBox.y, phaseToDraw1.textBox.sprites[0].getWidth(), phaseToDraw1.textBox.sprites[0].getHeight());
@@ -158,14 +205,50 @@ public class AnimationManager {
 
                 Phase phaseToAdd = future.pollFirst();
 
-                phaseToAdd.picture.x = phaseToDraw1.picture.x + offset;
+                phaseToAdd.picture.x = offset;
                 phaseToAdd.picture.y = Config.INIT_MIDPIC_Y;
                 phaseToAdd.textBox.x = phaseToAdd.picture.x + phaseToAdd.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET * Config.SCALE;
                 phaseToAdd.textBox.y = phaseToAdd.picture.y;
                 drawn.addLast(phaseToAdd);
             }
 
+            /*
+
+            hideLeft(){
+                if (future.isEmpty() = false) {
+                    remove first
+                    add last
+                }
+            }
+
+            hideRight{
+                if (past.isEmpty() = false){
+                    remove last
+                    add left
+                }
+            }
+
+             if(x < -955){
+
+                > add a new one at the end
+                >
+                >
+                >
+                >
+
+
+             }
+
+            */
             if (drawn.size() == 2){
+
+            if((drawn.peekFirst().picture.x < -955)&& (player.movedRight)){
+                hideLeftAddRight();
+            }
+                //System.out.println("Right pic x = " + drawn.peekLast().picture.x );
+            if((drawn.peekLast().picture.x > 1010) && (player.movedLeft)) {
+                hideRightAddLeft();
+            }
 
                 Phase phaseToDraw2 = drawn.peekLast();
                 if (phaseToDraw2 != null) {
@@ -174,6 +257,8 @@ public class AnimationManager {
                     phaseToDraw2.picture.draw(g2, phaseToDraw2.picture.x, phaseToDraw2.picture.y, phaseToDraw2.picture.sprites[0].getWidth(), phaseToDraw2.picture.sprites[0].getHeight());
                     phaseToDraw2.picture.updateFrame(); // in case the animation is dynamic this will animate it
                     phaseToDraw2.textBox.draw(g2, phaseToDraw2.textBox.x + Config.PIC_TEXTBOX_OFFSET, phaseToDraw2.textBox.y, phaseToDraw2.textBox.sprites[0].getWidth(), phaseToDraw2.textBox.sprites[0].getHeight());
+
+                    //System.out.println("PIC 1 x is: " + phaseToDraw1.picture.x);
                 }
             }
 

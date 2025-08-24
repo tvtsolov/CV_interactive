@@ -23,8 +23,8 @@ public final class Config {
     static public int BG_WIDTH = 1380;
     static public int BG_HEIGHT = 500;
 
-    static public int PIC_TEXTBOX_OFFSET    = 20 * SCALE;
-    static public int PIC_AREA_OFFSET       = 70 * SCALE;
+    static public int PIC_TEXTBOX_OFFSET    = 0;
+    static public int PIC_AREA_OFFSET       = 150 * SCALE;
 
     static public int INIT_LEFTPIC_X        = 500 * SCALE;
     static public int INIT_LEFTPIC_Y        = 0 * SCALE;
