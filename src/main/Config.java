@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public final class Config {
 
-    public static final int SCALE = 1;
+    public static final int SCALE = 2;
 
     public static final int screenWidth = 1000;
     public static final int screenHeight = 500;
@@ -26,14 +26,11 @@ public final class Config {
     static public int PIC_TEXTBOX_OFFSET    = 0;
     static public int PIC_AREA_OFFSET       = 150 * SCALE;
 
-    static public int INIT_LEFTPIC_X        = 500 * SCALE;
-    static public int INIT_LEFTPIC_Y        = 0 * SCALE;
-
     static public int INIT_MIDPIC_X         = 500 * SCALE;
     static public int INIT_MIDPIC_Y         = 0 * SCALE;
 
-    static public int INIT_RIGHTPIC_X       = 0 * SCALE;
-    static public int INIT_RIGHTPIC_Y       = 0 * SCALE;
+    static public int LEFT_BORDER_VISIBILITY = -955 * SCALE;
+    static public int RIGHT_BORDER_VISIBILITY = 1010 * SCALE;
 
     static public int INIT_BG_X             = -187 * SCALE;
     public static int INIT_BG_Y             = 0 * SCALE;

@@ -3,6 +3,7 @@ package Handlers;
 import animations.Animation;
 import animations.Phase;
 import main.Config;
+import main.Sound;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -21,6 +22,8 @@ public class Assets{
     public static Phase[] phases = new Phase[8];
     public static Deque<Phase> future = new ArrayDeque<>();
     public static Deque<Phase> past = new ArrayDeque<>();
+    public static Sound sound;
+    public static Sound music;
 
     public static void load(float speed) {
 
@@ -34,16 +37,6 @@ public class Assets{
                 tutorialSprites[0] = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
                 tutorialSprites[1] = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons2.png")));
                 tutorial = new Animation(tutorialSprites, Config.tutorialX, Config.tutorialY, 0.13F); // these coordinates are always relative to the window
-
-                //phase 0 (a welcome message first?)
-
-                //phase1
-//                BufferedImage picSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/phases/pics/pic1/pic1.png")));
-//                Animation picAnimation = new Animation(picSprite);
-//                BufferedImage textBoxSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/phases/textboxes/box1/textbox1.png")));
-//                Animation textBox = new Animation(textBoxSprite);
-//                Phase ph = new Phase(textBox, 0, 0, picAnimation, 0,0 );
-//                phases[1] = ph;
 
                 for(int i = 0; i < phases.length; i++){
                     Animation pictureAnimation;
@@ -59,7 +52,7 @@ public class Assets{
                         BufferedImage[] sprites = new BufferedImage[2];
                         sprites[0] = picSprite1;
                         sprites[1] = picSprite2;
-                        pictureAnimation = new Animation(sprites);
+                        pictureAnimation = new Animation(sprites, 0, 0, .2F);
                     }
                     String textBoxPath = "/phases/textboxes/box"+ i + "/textbox" + i + ".png";
                     BufferedImage textBoxSprite = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream(textBoxPath)));
@@ -69,6 +62,9 @@ public class Assets{
                     future.addLast(ph);
                 }
 
+                //Sounds
+                sound = new Sound("/sounds/steps_cat.wav");
+                music = new Sound("/sounds/game_music.wav");
 
         }
         catch(IOException e){

@@ -5,6 +5,7 @@ import animations.Phase;
 import animations.Player;
 import main.Config;
 import main.GamePanel;
+import main.Sound;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -25,6 +26,7 @@ public class AnimationManager {
     Deque<Phase> drawn = new ArrayDeque<>();
     Phase left;
     Phase right;
+    Sound sound;
 
     private boolean tutorialFading = false;
     public Player player;
@@ -39,6 +41,7 @@ public class AnimationManager {
         tutorialSprites = Assets.tutorialSprites;
         future = Assets.future;
         past = Assets.past;
+        sound = Assets.sound;
     }
 
 
@@ -80,7 +83,6 @@ public class AnimationManager {
 
             // add coordinates for the new phase (ph) on the right side of the current phase
 
-
             phLeft.picture.x = phRight.picture.x - offset - Config.PIC_TEXTBOX_OFFSET;
             phLeft.picture.y = Config.INIT_MIDPIC_Y;
             phLeft.textBox.x = phLeft.picture.x + phLeft.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET * Config.SCALE;
@@ -89,10 +91,25 @@ public class AnimationManager {
         }
     }
 
+    public void playSF(Boolean loop){
+        sound.setFile();
+        if(!loop) sound.play();
+        else sound.loop();
+    }
+
+    public void stopSF(){
+        sound.stop();
+    }
 
     public void updateAnimationsPositions(){
 
         if (player.state.name.equals("WALKING")) {
+
+            if((sound.clip == null) || (!sound.clip.isActive())){
+                playSF( true);
+            }
+
+
             if (player.x < Config.LEFT_BOUNDARY) {
                 if (player.movedLeft){
                     backgroundAnimation.x += (int) player.speed;
@@ -126,6 +143,10 @@ public class AnimationManager {
                     }
                 }
             }
+        } else if(player.state.name.equals("SITTING")){
+            if(sound.clip.isRunning()){
+                stopSF();
+            }
         }
     }
 
@@ -133,7 +154,9 @@ public class AnimationManager {
     // run all animatable objects if they are active:
     public void draw(Graphics2D g2){
 
-
+        if (drawn.size() == 1){
+            System.out.println("Ouchie");
+        }
 
         // draw the BG
         if (backgroundImage != null){
@@ -212,43 +235,13 @@ public class AnimationManager {
                 drawn.addLast(phaseToAdd);
             }
 
-            /*
-
-            hideLeft(){
-                if (future.isEmpty() = false) {
-                    remove first
-                    add last
-                }
-            }
-
-            hideRight{
-                if (past.isEmpty() = false){
-                    remove last
-                    add left
-                }
-            }
-
-             if(x < -955){
-
-                > add a new one at the end
-                >
-                >
-                >
-                >
-
-
-             }
-
-            */
             if (drawn.size() == 2){
 
-            if((drawn.peekFirst().picture.x < -955)&& (player.movedRight)){
-                hideLeftAddRight();
-            }
-                //System.out.println("Right pic x = " + drawn.peekLast().picture.x );
-            if((drawn.peekLast().picture.x > 1010) && (player.movedLeft)) {
-                hideRightAddLeft();
-            }
+                if((drawn.peekFirst().picture.x < Config.LEFT_BORDER_VISIBILITY)&& (player.movedRight)){
+                    hideLeftAddRight();
+                } else if((drawn.peekLast().picture.x > Config.RIGHT_BORDER_VISIBILITY) && (player.movedLeft)) {
+                    hideRightAddLeft();
+                }
 
                 Phase phaseToDraw2 = drawn.peekLast();
                 if (phaseToDraw2 != null) {
