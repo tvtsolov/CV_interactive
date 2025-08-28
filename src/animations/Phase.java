@@ -11,4 +11,11 @@ public class Phase {
         this.picture = pic;
         this.textBox = txt;
     }
+//todo this needs to have it's own draw function
+//    public void draw(){
+//
+//
+//
+//    }
+
 }

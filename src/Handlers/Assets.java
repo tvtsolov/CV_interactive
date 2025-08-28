@@ -4,6 +4,7 @@ import animations.Animation;
 import animations.Phase;
 import main.Config;
 import main.Sound;
+import main.UI;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -18,18 +19,31 @@ public class Assets{
     public static BufferedImage backgroundImage;
     public static Animation backgroundAnimation;
     public static BufferedImage[] tutorialSprites;
+
     public static Animation tutorial;
-    public static Phase[] phases = new Phase[8];
+    public static Phase[] phases = new Phase[9];
     public static Deque<Phase> future = new ArrayDeque<>();
     public static Deque<Phase> past = new ArrayDeque<>();
+
     public static Sound sound;
     public static Sound music;
+
+    public static UI menu;
+    public static BufferedImage[] menuSprites;
 
     public static void load(float speed) {
 
         tutorialSprites = new BufferedImage[2];
+        menuSprites = new BufferedImage[2];
 
         try {
+
+                BufferedImage UI1 = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/UI/UI1.png")));
+                BufferedImage UI2 = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/UI/UI2.png")));
+                menuSprites[0] = UI1;
+                menuSprites[1] = UI2;
+                menu = new UI(menuSprites);
+
                 backgroundImage = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/background/test-bg.png")));
 
                 backgroundAnimation = new Animation(backgroundImage, Config.INIT_BG_X, Config.INIT_BG_Y, speed);
@@ -37,6 +51,8 @@ public class Assets{
                 tutorialSprites[0] = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons1.png")));
                 tutorialSprites[1] = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/buttons/dir_buttons2.png")));
                 tutorial = new Animation(tutorialSprites, Config.tutorialX, Config.tutorialY, 0.13F); // these coordinates are always relative to the window
+
+
 
                 for(int i = 0; i < phases.length; i++){
                     Animation pictureAnimation;

@@ -7,8 +7,6 @@ import java.awt.image.BufferedImage;
 
 abstract public  class Animatable {
 
-    public Animation[] frames;
-
     public int x;
     public int y;
     public float speed;
@@ -60,8 +58,6 @@ abstract public  class Animatable {
         BufferedImage image = sprites[currentFrame-1];
         int scale = Config.SCALE;
 
-
-
         Entity.Direction dir = Entity.Direction.RIGHT;
 
         if (image != null) {
@@ -71,15 +67,6 @@ abstract public  class Animatable {
         }
     }
 
-
-    // draw a given image only, with a given scale
-    public void draw(Graphics2D g2, BufferedImage image, int x, int y, int customScale){
-        if (image != null){
-            g2.drawImage(image, x + image.getWidth()* customScale , y, -image.getWidth() * customScale, image.getHeight() * customScale, null);
-        } else {
-            System.out.println("Warning: image is null, cannot draw.");
-        }
-    }
 
     //draw with fade effect
     public void draw(Graphics2D g2, int x, int y, int width, int height, boolean fadeOut){

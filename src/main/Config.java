@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public final class Config {
 
-    public static final int SCALE = 2;
+    public static final int SCALE = 1;
 
     public static final int screenWidth = 1000;
     public static final int screenHeight = 500;

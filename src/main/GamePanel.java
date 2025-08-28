@@ -22,6 +22,7 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     Player player = new Player(this, keyH);
     AnimationManager anManager = new AnimationManager(this, player);
+    UI menu;
 
 
     public GamePanel() {
@@ -30,6 +31,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
+        this.menu = Assets.menu;
     }
 
     public void startGameThread() {

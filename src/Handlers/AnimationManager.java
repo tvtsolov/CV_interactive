@@ -27,6 +27,8 @@ public class AnimationManager {
     Phase left;
     Phase right;
     Sound sound;
+    Sound music;
+    Phase currentlyDrawn;
 
     private boolean tutorialFading = false;
     public Player player;
@@ -42,6 +44,9 @@ public class AnimationManager {
         future = Assets.future;
         past = Assets.past;
         sound = Assets.sound;
+        music = Assets.music;
+        music.setFile();
+        music.loop();
     }
 
 
@@ -64,6 +69,7 @@ public class AnimationManager {
             phRight.picture.y = Config.INIT_MIDPIC_Y;
             phRight.textBox.x = phRight.picture.x + phRight.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET * Config.SCALE;
             phRight.textBox.y = phRight.picture.y;
+
             //add x and y
         }
     }
@@ -91,13 +97,13 @@ public class AnimationManager {
         }
     }
 
-    public void playSF(Boolean loop){
+    public void playSound(Boolean loop){
         sound.setFile();
         if(!loop) sound.play();
         else sound.loop();
     }
 
-    public void stopSF(){
+    public void stopSound(){
         sound.stop();
     }
 
@@ -106,7 +112,7 @@ public class AnimationManager {
         if (player.state.name.equals("WALKING")) {
 
             if((sound.clip == null) || (!sound.clip.isActive())){
-                playSF( true);
+                playSound( true);
             }
 
 
@@ -145,7 +151,15 @@ public class AnimationManager {
             }
         } else if(player.state.name.equals("SITTING")){
             if(sound.clip.isRunning()){
-                stopSF();
+                stopSound();
+            }
+        }
+
+        if(!drawn.isEmpty()) {
+            if ((drawn.peekFirst().picture.x < Config.LEFT_BORDER_VISIBILITY) && (player.movedRight)) {
+                hideLeftAddRight();
+            } else if ((drawn.peekLast().picture.x > Config.RIGHT_BORDER_VISIBILITY) && (player.movedLeft)) {
+                hideRightAddLeft();
             }
         }
     }
@@ -153,10 +167,6 @@ public class AnimationManager {
 
     // run all animatable objects if they are active:
     public void draw(Graphics2D g2){
-
-        if (drawn.size() == 1){
-            System.out.println("Ouchie");
-        }
 
         // draw the BG
         if (backgroundImage != null){
@@ -181,14 +191,11 @@ public class AnimationManager {
                 backgroundAnimation.x = backgroundAnimation.x + width * Config.SCALE;
             }
 
-            //System.out.println("BG middle X is " + backgroundAnimation.x );
-            //System.out.println("Player X is " + player.x);
-
         } else {
             System.out.println("Warning: background is null, cannot draw.");
         }
 
-        // draw the rest
+        // draw the "tutorial"
 
         if (tutorial.active) {
             if ((player.x > Config.LEFT_BOUNDARY && player.x < Config.RIGHT_BOUNDARY) && !tutorialFading)
@@ -201,7 +208,8 @@ public class AnimationManager {
             tutorial.updateFrame();
         }
 
-        Phase currentlyDrawn;
+        // Draw the phases
+
         if(drawn.isEmpty()){                // add the first phase
             currentlyDrawn = future.pollFirst();
             if(currentlyDrawn != null) {
@@ -216,9 +224,8 @@ public class AnimationManager {
         if(!drawn.isEmpty()) {
 
             Phase phaseToDraw1 = drawn.peekFirst();
+
             int offset = phaseToDraw1.picture.x + phaseToDraw1.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET + phaseToDraw1.textBox.sprites[0].getWidth() * Config.SCALE + Config.PIC_AREA_OFFSET;
-
-
 
             phaseToDraw1.picture.draw(g2, phaseToDraw1.picture.x, phaseToDraw1.picture.y, phaseToDraw1.picture.sprites[0].getWidth(), phaseToDraw1.picture.sprites[0].getHeight());
             phaseToDraw1.picture.updateFrame(); // in case the animation is dynamic this will animate it
@@ -237,24 +244,17 @@ public class AnimationManager {
 
             if (drawn.size() == 2){
 
-                if((drawn.peekFirst().picture.x < Config.LEFT_BORDER_VISIBILITY)&& (player.movedRight)){
-                    hideLeftAddRight();
-                } else if((drawn.peekLast().picture.x > Config.RIGHT_BORDER_VISIBILITY) && (player.movedLeft)) {
-                    hideRightAddLeft();
-                }
-
                 Phase phaseToDraw2 = drawn.peekLast();
                 if (phaseToDraw2 != null) {
-                    phaseToDraw1 = drawn.peekFirst();
+                    //phaseToDraw1 = drawn.peekFirst();
 
                     phaseToDraw2.picture.draw(g2, phaseToDraw2.picture.x, phaseToDraw2.picture.y, phaseToDraw2.picture.sprites[0].getWidth(), phaseToDraw2.picture.sprites[0].getHeight());
                     phaseToDraw2.picture.updateFrame(); // in case the animation is dynamic this will animate it
                     phaseToDraw2.textBox.draw(g2, phaseToDraw2.textBox.x + Config.PIC_TEXTBOX_OFFSET, phaseToDraw2.textBox.y, phaseToDraw2.textBox.sprites[0].getWidth(), phaseToDraw2.textBox.sprites[0].getHeight());
 
-                    //System.out.println("PIC 1 x is: " + phaseToDraw1.picture.x);
+
                 }
             }
-
         }
     }
 
