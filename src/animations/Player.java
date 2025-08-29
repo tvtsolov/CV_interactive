@@ -9,6 +9,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import static main.UI.selected;
+
 public class Player extends Entity{
 
     private GamePanel gp;
@@ -80,6 +82,9 @@ public class Player extends Entity{
     }
 
     private void updatePosition(){
+        if(!selected){
+            return;
+        }
         if(state.name.equals("WALKING")){
             movedLeft = false;
             movedRight = false;
@@ -95,7 +100,6 @@ public class Player extends Entity{
                     }
                 }
             }
-
     }
 
     private void setPlayerImage() {
@@ -127,11 +131,12 @@ public class Player extends Entity{
         stateManager.run();
         updatePosition();
         state.animation.updateFrame();
-
     }
 
     public void draw(Graphics2D g2){
-
+        if(!selected){
+            return;
+        }
         if (animateSittingDown) {
             if (state.getFrame() <= sitting.size) {
                 if (state.getFrame() == sitting.size) {

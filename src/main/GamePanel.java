@@ -9,6 +9,8 @@ import animations.Player;
 import javax.swing.JPanel;
 import java.awt.*;
 
+import static Handlers.Assets.*;
+
 public class GamePanel extends JPanel implements Runnable {
 
     final int scale = Config.SCALE;
@@ -22,7 +24,6 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     Player player = new Player(this, keyH);
     AnimationManager anManager = new AnimationManager(this, player, this);
-    UI menu;
 
 
     public GamePanel() {
@@ -96,8 +97,16 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         player.update();
-        anManager.updateAnimationsPositions();
+        if((player.movedLeft && past.isEmpty()) && !anManager.drawn.isEmpty() && anManager.drawn.peekFirst().picture.x > Config.LEFT_END){
 
+            System.out.println("reached left end");
+        }
+        else if(player.movedRight && future.isEmpty() && anManager.drawn.peekLast().picture.x < Config.RIGHT_END){
+
+            System.out.println("reached right end");
+        } else {
+            anManager.updateAnimationsPositions();
+        }
     }
 
     public void paintComponent(Graphics g) {

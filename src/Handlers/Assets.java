@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Objects;
-import java.util.Stack;
 
 public class Assets{
 
@@ -25,7 +24,7 @@ public class Assets{
     public static Deque<Phase> future = new ArrayDeque<>();
     public static Deque<Phase> past = new ArrayDeque<>();
 
-    public static Sound sound;
+    public static Sound soundSelect;
     public static Sound music;
 
     public static UI menu;
@@ -37,6 +36,10 @@ public class Assets{
         menuSprites = new BufferedImage[2];
 
         try {
+
+                //Sounds
+                soundSelect = new Sound("/sounds/ui_select.wav");
+                music = new Sound("/sounds/game_music.wav");
 
                 BufferedImage UI1 = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/UI/UI1.png")));
                 BufferedImage UI2 = ImageIO.read(Objects.requireNonNull(Assets.class.getResourceAsStream("/UI/UI2.png")));
@@ -78,9 +81,7 @@ public class Assets{
                     future.addLast(ph);
                 }
 
-                //Sounds
-                sound = new Sound("/sounds/steps_cat.wav");
-                music = new Sound("/sounds/game_music.wav");
+
 
         }
         catch(IOException e){

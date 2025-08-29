@@ -50,6 +50,10 @@ public class Config {
     public static int PLAYER_INIT_POS_Y = (BG_HEIGHT * SCALE) - playerSpriteHeight * SCALE ;
     public static float PLAYER_SPEED = 3F * SCALE;
 
+
+    public static int RIGHT_END = 100 * SCALE;
+    public static int LEFT_END = 520 * SCALE;
+
     public static int DRAW_BG_LEFT_BOUND = 3 * SCALE;
     public static int DRAW_BG_RIGHT_BOUND = -350 + SCALE;
 
@@ -58,6 +62,8 @@ public class Config {
     static public int RIGHT_BOUNDARY = 100 * SCALE;
 
     public static void setValues(){
+        RIGHT_END = 100 * SCALE;
+        LEFT_END = 520 * SCALE;
         playerSpriteHeight = plImage.getHeight();
         PLAYER_INIT_POS_X = 30 * SCALE;
         PLAYER_INIT_POS_Y = (BG_HEIGHT * SCALE) - playerSpriteHeight * SCALE ;

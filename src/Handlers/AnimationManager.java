@@ -25,10 +25,10 @@ public class AnimationManager {
     Phase[] phases = Assets.phases;
     Deque<Phase> future;
     Deque<Phase> past;
-    Deque<Phase> drawn = new ArrayDeque<>();
+    public Deque<Phase> drawn = new ArrayDeque<>();
     Phase left;
     Phase right;
-    Sound sound;
+    Sound soundSelect;
     Sound music;
     Phase currentlyDrawn;
     public UI menu;
@@ -49,10 +49,8 @@ public class AnimationManager {
         tutorialSprites = Assets.tutorialSprites;
         future = Assets.future;
         past = Assets.past;
-        sound = Assets.sound;
+        soundSelect = Assets.soundSelect;
         music = Assets.music;
-        music.setFile();
-        music.loop();
     }
 
 
@@ -103,34 +101,41 @@ public class AnimationManager {
         }
     }
 
-    public void playSound(Boolean loop){
-        sound.setFile();
-        if(!loop) sound.play();
-        else sound.loop();
+    public void playSound(Boolean loop, Sound snd){
+        if(snd != null) {
+            snd.setFile();
+            if (!loop) {
+                snd.play();
+            } else {
+                snd.loop();
+            }
+        } else {
+            System.out.println("Sound is NULL");
+        }
     }
 
+
     public void stopSound(){
-        sound.stop();
+        soundSelect.stop();
     }
 
     public void updateAnimationsPositions(){
 
         if (player.state.name.equals("WALKING")) {
 
-            if((sound.clip == null) || (!sound.clip.isActive())){
-                playSound( true);
-            }
-
-
             if (player.x < Config.LEFT_BOUNDARY) {
-                if (player.movedLeft){
-                    backgroundAnimation.x += (int) player.speed;
 
+                if (player.movedLeft){
+                //move background
+                    backgroundAnimation.x += (int) player.speed;
+                //move phases
                     if (!drawn.isEmpty()) {
                         if (drawn.size() == 1) {
                             drawn.peekFirst().picture.x += (int) player.speed;
+                            System.out.println("pic X is" + drawn.peekFirst().picture.x);
                             drawn.peekFirst().textBox.x += (int) player.speed;
                         } else if (drawn.size() == 2) {
+                            System.out.println("pic X is" + drawn.peekFirst().picture.x);
                             drawn.peekFirst().picture.x += (int) player.speed;
                             drawn.peekFirst().textBox.x += (int) player.speed;
                             drawn.peekLast().picture.x += (int) player.speed;
@@ -139,26 +144,29 @@ public class AnimationManager {
                     }
                 }
             } else if (player.x > Config.RIGHT_BOUNDARY) {
-                if (player.movedRight){
-                    backgroundAnimation.x -= (int) player.speed;
 
+
+                if (player.movedRight){
+                //move background
+                    backgroundAnimation.x -= (int) player.speed;
+                //move phases
                     if (!drawn.isEmpty()) {
                         if (drawn.size() == 1) {
                             drawn.peekFirst().picture.x -= (int) player.speed;
+                            //System.out.println("pic X is" + drawn.peekFirst().picture.x);
                             drawn.peekFirst().textBox.x -= (int) player.speed;
                         } else if (drawn.size() == 2) {
                             drawn.peekFirst().picture.x -= (int) player.speed;
                             drawn.peekFirst().textBox.x -= (int) player.speed;
                             drawn.peekLast().picture.x -= (int) player.speed;
+                            System.out.println("pic Last X is" + drawn.peekLast().picture.x);
                             drawn.peekLast().textBox.x -= (int) player.speed;
                         }
                     }
                 }
             }
-        } else if(player.state.name.equals("SITTING")){
-            if(sound.clip.isRunning()){
-                stopSound();
-            }
+
+            //System.out.println("BG X is " + backgroundAnimation.x);
         }
 
         if(!drawn.isEmpty()) {
@@ -188,9 +196,9 @@ public class AnimationManager {
             menu.display(g2);
             if (UI.selected){
                 setWindowSize();
-                Config.setValues(); //todo
+                Config.setValues();
                 player.setDefaultValues();
-                // backgroundAnimation.speed =
+                playSound(true, music);
             }
         } else {
             // draw the BG
