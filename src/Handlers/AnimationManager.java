@@ -6,7 +6,9 @@ import animations.Player;
 import main.Config;
 import main.GamePanel;
 import main.Sound;
+import main.UI;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
@@ -29,14 +31,18 @@ public class AnimationManager {
     Sound sound;
     Sound music;
     Phase currentlyDrawn;
+    public UI menu;
+    public GamePanel gPanel;
 
     private boolean tutorialFading = false;
     public Player player;
 
-    public AnimationManager(GamePanel gp, Player player){
+    public AnimationManager(GamePanel gp, Player player, GamePanel g){
+        this.gPanel = g; // reference to the window where the object belongs so it can change the window size
         this.gp = gp;
         this.player = player;
         Assets.load(player.speed);
+        this.menu = Assets.menu;
         backgroundImage = Assets.backgroundImage;
         backgroundAnimation = Assets.backgroundAnimation;
         tutorial = Assets.tutorial;
@@ -164,95 +170,115 @@ public class AnimationManager {
         }
     }
 
+    public void setWindowSize() {
+        gPanel.setPreferredSize(new Dimension(Config.screenWidth *Config.SCALE, Config.screenHeight * Config.SCALE));
+        Window window = SwingUtilities.getWindowAncestor(gPanel);
+        if (window != null) {
+            window.pack();        // resize window to match new preferred size
+            window.revalidate();  // refresh layout
+            window.repaint();     // redraw contents
+        }
+        player.setDefaultValues();
+    }
 
     // run all animatable objects if they are active:
     public void draw(Graphics2D g2){
 
-        // draw the BG
-        if (backgroundImage != null){
-            int width = Config.BG_WIDTH;
-            int height = Config.BG_HEIGHT;
-
-            //draw first and middle panel background
-            backgroundAnimation.draw(g2, backgroundAnimation.x, backgroundAnimation.y, width, height);
-
-            //draw left panel background or right panel based on the position of the main background sprite
-            if(backgroundAnimation.x > Config.DRAW_BG_LEFT_BOUND) {
-                backgroundAnimation.draw(g2, backgroundAnimation.x - width * Config.SCALE, backgroundAnimation.y, width, height);
-            }  else if(backgroundAnimation.x < Config.DRAW_BG_RIGHT_BOUND) {  // draw right panel
-                backgroundAnimation.draw(g2, backgroundAnimation.x + width * Config.SCALE, backgroundAnimation.y, width, height);
+        if(!UI.selected){
+            menu.display(g2);
+            if (UI.selected){
+                setWindowSize();
+                Config.setValues(); //todo
+                player.setDefaultValues();
+                // backgroundAnimation.speed =
             }
-
-            //reset middle bg sprite position
-            if(backgroundAnimation.x > 1025 * Config.SCALE){
-                backgroundAnimation.x = backgroundAnimation.x - width * Config.SCALE;
-            }
-            if(backgroundAnimation.x < - 1400 * Config.SCALE){
-                backgroundAnimation.x = backgroundAnimation.x + width * Config.SCALE;
-            }
-
         } else {
-            System.out.println("Warning: background is null, cannot draw.");
-        }
+            // draw the BG
+            if (backgroundImage != null){
+                int width = Config.BG_WIDTH;
+                int height = Config.BG_HEIGHT;
 
-        // draw the "tutorial"
+                //draw first and middle panel background
+                backgroundAnimation.draw(g2, backgroundAnimation.x, backgroundAnimation.y, width, height);
 
-        if (tutorial.active) {
-            if ((player.x > Config.LEFT_BOUNDARY && player.x < Config.RIGHT_BOUNDARY) && !tutorialFading)
-                tutorial.draw(g2, tutorial.x, tutorial.y, tutorial.sprites[0].getWidth(), tutorial.sprites[0].getHeight());
-            else {
-                //if we want it to fade in or out:
-                tutorialFading = true;
-                tutorial.draw(g2, tutorial.x, tutorial.y, tutorial.sprites[0].getWidth(),  tutorial.sprites[0].getHeight(), true);
-            }
-            tutorial.updateFrame();
-        }
+                //draw left panel background or right panel based on the position of the main background sprite
+                if(backgroundAnimation.x > Config.DRAW_BG_LEFT_BOUND) {
+                    backgroundAnimation.draw(g2, backgroundAnimation.x - width * Config.SCALE, backgroundAnimation.y, width, height);
+                }  else if(backgroundAnimation.x < Config.DRAW_BG_RIGHT_BOUND) {  // draw right panel
+                    backgroundAnimation.draw(g2, backgroundAnimation.x + width * Config.SCALE, backgroundAnimation.y, width, height);
+                }
 
-        // Draw the phases
+                //reset middle bg sprite position
+                if(backgroundAnimation.x > 1025 * Config.SCALE){
+                    backgroundAnimation.x = backgroundAnimation.x - width * Config.SCALE;
+                }
+                if(backgroundAnimation.x < - 1400 * Config.SCALE){
+                    backgroundAnimation.x = backgroundAnimation.x + width * Config.SCALE;
+                }
 
-        if(drawn.isEmpty()){                // add the first phase
-            currentlyDrawn = future.pollFirst();
-            if(currentlyDrawn != null) {
-                currentlyDrawn.picture.x = Config.INIT_MIDPIC_X;
-                currentlyDrawn.picture.y = Config.INIT_MIDPIC_Y;
-                currentlyDrawn.textBox.x = currentlyDrawn.picture.x + currentlyDrawn.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET * Config.SCALE;
-                currentlyDrawn.textBox.y = currentlyDrawn.picture.y;
-            }
-            drawn.addFirst(currentlyDrawn);
-        }
-                                            //draw one phase
-        if(!drawn.isEmpty()) {
-
-            Phase phaseToDraw1 = drawn.peekFirst();
-
-            int offset = phaseToDraw1.picture.x + phaseToDraw1.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET + phaseToDraw1.textBox.sprites[0].getWidth() * Config.SCALE + Config.PIC_AREA_OFFSET;
-
-            phaseToDraw1.picture.draw(g2, phaseToDraw1.picture.x, phaseToDraw1.picture.y, phaseToDraw1.picture.sprites[0].getWidth(), phaseToDraw1.picture.sprites[0].getHeight());
-            phaseToDraw1.picture.updateFrame(); // in case the animation is dynamic this will animate it
-            phaseToDraw1.textBox.draw(g2, phaseToDraw1.textBox.x + Config.PIC_TEXTBOX_OFFSET, phaseToDraw1.textBox.y, phaseToDraw1.textBox.sprites[0].getWidth(), phaseToDraw1.textBox.sprites[0].getHeight());
-
-            if ((phaseToDraw1.picture.x < 20) && (drawn.size() < 2) && (!future.isEmpty())) { // add second phase if there isn't any added and if future is not empty
-
-                Phase phaseToAdd = future.pollFirst();
-
-                phaseToAdd.picture.x = offset;
-                phaseToAdd.picture.y = Config.INIT_MIDPIC_Y;
-                phaseToAdd.textBox.x = phaseToAdd.picture.x + phaseToAdd.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET * Config.SCALE;
-                phaseToAdd.textBox.y = phaseToAdd.picture.y;
-                drawn.addLast(phaseToAdd);
+            } else {
+                System.out.println("Warning: background is null, cannot draw.");
             }
 
-            if (drawn.size() == 2){
+            // draw the "tutorial"
 
-                Phase phaseToDraw2 = drawn.peekLast();
-                if (phaseToDraw2 != null) {
-                    //phaseToDraw1 = drawn.peekFirst();
+            if (tutorial.active) {
+                if ((player.x > Config.LEFT_BOUNDARY && player.x < Config.RIGHT_BOUNDARY) && !tutorialFading)
+                    tutorial.draw(g2, tutorial.x, tutorial.y, tutorial.sprites[0].getWidth(), tutorial.sprites[0].getHeight());
+                else {
+                    //if we want it to fade in or out:
+                    tutorialFading = true;
+                    tutorial.draw(g2, tutorial.x, tutorial.y, tutorial.sprites[0].getWidth(),  tutorial.sprites[0].getHeight(), true);
+                }
+                tutorial.updateFrame();
+            }
 
-                    phaseToDraw2.picture.draw(g2, phaseToDraw2.picture.x, phaseToDraw2.picture.y, phaseToDraw2.picture.sprites[0].getWidth(), phaseToDraw2.picture.sprites[0].getHeight());
-                    phaseToDraw2.picture.updateFrame(); // in case the animation is dynamic this will animate it
-                    phaseToDraw2.textBox.draw(g2, phaseToDraw2.textBox.x + Config.PIC_TEXTBOX_OFFSET, phaseToDraw2.textBox.y, phaseToDraw2.textBox.sprites[0].getWidth(), phaseToDraw2.textBox.sprites[0].getHeight());
+            // Draw the phases
+
+            if(drawn.isEmpty()){                // add the first phase
+                currentlyDrawn = future.pollFirst();
+                if(currentlyDrawn != null) {
+                    currentlyDrawn.picture.x = Config.INIT_MIDPIC_X;
+                    currentlyDrawn.picture.y = Config.INIT_MIDPIC_Y;
+                    currentlyDrawn.textBox.x = currentlyDrawn.picture.x + currentlyDrawn.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET * Config.SCALE;
+                    currentlyDrawn.textBox.y = currentlyDrawn.picture.y;
+                }
+                drawn.addFirst(currentlyDrawn);
+            }
+            //draw one phase
+            if(!drawn.isEmpty()) {
+
+                Phase phaseToDraw1 = drawn.peekFirst();
+
+                int offset = phaseToDraw1.picture.x + phaseToDraw1.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET + phaseToDraw1.textBox.sprites[0].getWidth() * Config.SCALE + Config.PIC_AREA_OFFSET;
+
+                phaseToDraw1.picture.draw(g2, phaseToDraw1.picture.x, phaseToDraw1.picture.y, phaseToDraw1.picture.sprites[0].getWidth(), phaseToDraw1.picture.sprites[0].getHeight());
+                phaseToDraw1.picture.updateFrame(); // in case the animation is dynamic this will animate it
+                phaseToDraw1.textBox.draw(g2, phaseToDraw1.textBox.x + Config.PIC_TEXTBOX_OFFSET, phaseToDraw1.textBox.y, phaseToDraw1.textBox.sprites[0].getWidth(), phaseToDraw1.textBox.sprites[0].getHeight());
+
+                if ((phaseToDraw1.picture.x < 20) && (drawn.size() < 2) && (!future.isEmpty())) { // add second phase if there isn't any added and if future is not empty
+
+                    Phase phaseToAdd = future.pollFirst();
+
+                    phaseToAdd.picture.x = offset;
+                    phaseToAdd.picture.y = Config.INIT_MIDPIC_Y;
+                    phaseToAdd.textBox.x = phaseToAdd.picture.x + phaseToAdd.picture.sprites[0].getWidth() * Config.SCALE + Config.PIC_TEXTBOX_OFFSET * Config.SCALE;
+                    phaseToAdd.textBox.y = phaseToAdd.picture.y;
+                    drawn.addLast(phaseToAdd);
+                }
+
+                if (drawn.size() == 2){
+
+                    Phase phaseToDraw2 = drawn.peekLast();
+                    if (phaseToDraw2 != null) {
+                        //phaseToDraw1 = drawn.peekFirst();
+
+                        phaseToDraw2.picture.draw(g2, phaseToDraw2.picture.x, phaseToDraw2.picture.y, phaseToDraw2.picture.sprites[0].getWidth(), phaseToDraw2.picture.sprites[0].getHeight());
+                        phaseToDraw2.picture.updateFrame(); // in case the animation is dynamic this will animate it
+                        phaseToDraw2.textBox.draw(g2, phaseToDraw2.textBox.x + Config.PIC_TEXTBOX_OFFSET, phaseToDraw2.textBox.y, phaseToDraw2.textBox.sprites[0].getWidth(), phaseToDraw2.textBox.sprites[0].getHeight());
 
 
+                    }
                 }
             }
         }

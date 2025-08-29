@@ -38,7 +38,7 @@ public class Player extends Entity{
         setDefaultValues(); // sets speed as well as X and Y
     }
 
-    private void setDefaultValues(){
+    public void setDefaultValues(){
 
         x = Config.PLAYER_INIT_POS_X;
         y = Config.PLAYER_INIT_POS_Y;
@@ -132,8 +132,6 @@ public class Player extends Entity{
 
     public void draw(Graphics2D g2){
 
-        //g2.setColor(Color.white);
-        //g2.fillRect(x, y, gp.tileSize, gp.tileSize);
         if (animateSittingDown) {
             if (state.getFrame() <= sitting.size) {
                 if (state.getFrame() == sitting.size) {

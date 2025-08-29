@@ -21,17 +21,17 @@ public class GamePanel extends JPanel implements Runnable {
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     Player player = new Player(this, keyH);
-    AnimationManager anManager = new AnimationManager(this, player);
+    AnimationManager anManager = new AnimationManager(this, player, this);
     UI menu;
 
 
     public GamePanel() {
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(Color.gray);
+        //this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        setPreferredSize(new Dimension(Assets.menu.sprites[0].getWidth(), Assets.menu.sprites[0].getHeight()));
+        this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
-        this.menu = Assets.menu;
     }
 
     public void startGameThread() {
@@ -97,6 +97,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         player.update();
         anManager.updateAnimationsPositions();
+
     }
 
     public void paintComponent(Graphics g) {
@@ -105,8 +106,9 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         anManager.draw(g2);
-        player.draw(g2);
-
+        if(anManager.menu.selected){
+            player.draw(g2);
+        }
         g2.dispose();
 
     }
