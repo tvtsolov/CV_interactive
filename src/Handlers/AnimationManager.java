@@ -132,10 +132,10 @@ public class AnimationManager {
                     if (!drawn.isEmpty()) {
                         if (drawn.size() == 1) {
                             drawn.peekFirst().picture.x += (int) player.speed;
-                            System.out.println("pic X is" + drawn.peekFirst().picture.x);
+                            //System.out.println("pic X is" + drawn.peekFirst().picture.x);
                             drawn.peekFirst().textBox.x += (int) player.speed;
                         } else if (drawn.size() == 2) {
-                            System.out.println("pic X is" + drawn.peekFirst().picture.x);
+                            //System.out.println("pic X is" + drawn.peekFirst().picture.x);
                             drawn.peekFirst().picture.x += (int) player.speed;
                             drawn.peekFirst().textBox.x += (int) player.speed;
                             drawn.peekLast().picture.x += (int) player.speed;
@@ -159,7 +159,7 @@ public class AnimationManager {
                             drawn.peekFirst().picture.x -= (int) player.speed;
                             drawn.peekFirst().textBox.x -= (int) player.speed;
                             drawn.peekLast().picture.x -= (int) player.speed;
-                            System.out.println("pic Last X is" + drawn.peekLast().picture.x);
+                            //System.out.println("pic Last X is" + drawn.peekLast().picture.x);
                             drawn.peekLast().textBox.x -= (int) player.speed;
                         }
                     }

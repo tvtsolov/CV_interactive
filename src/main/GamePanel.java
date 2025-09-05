@@ -99,11 +99,11 @@ public class GamePanel extends JPanel implements Runnable {
         player.update();
         if((player.movedLeft && past.isEmpty()) && !anManager.drawn.isEmpty() && anManager.drawn.peekFirst().picture.x > Config.LEFT_END){
 
-            System.out.println("reached left end");
+            //System.out.println("reached left end");
         }
         else if(player.movedRight && future.isEmpty() && anManager.drawn.peekLast().picture.x < Config.RIGHT_END){
 
-            System.out.println("reached right end");
+            //System.out.println("reached right end");
         } else {
             anManager.updateAnimationsPositions();
         }
@@ -119,9 +119,6 @@ public class GamePanel extends JPanel implements Runnable {
             player.draw(g2);
         }
         g2.dispose();
-
     }
-
-
 }
 
